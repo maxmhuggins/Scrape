@@ -38,9 +38,36 @@ headers = {
     'Cache-Control': 'max-age=0',
 }
 
-response = requests.get('https://github.com/***REMOVED***/Scrape', headers=headers, cookies=cookies)
+url = 'https://github.com/***REMOVED***/Scrape'
+
+response = requests.get(url, headers=headers, cookies=cookies)
 
 
 soup = BeautifulSoup(response.content, 'html.parser')
 results = soup.find('div', class_='plain')
+print(results.text)
+
+print('========== Another method =======')
+
+from bs4 import BeautifulSoup
+import requests
+
+# Start the session
+session = requests.Session()
+
+# Create the payload
+payload = {'login_field':'***REMOVED***', 
+          'password':'***REMOVED***'
+         }
+
+# Post the payload to the site to log in
+s = session.post("https://github.com/login", data=payload)
+
+# Navigate to the next page and scrape the data
+s = session.get('https://github.com/***REMOVED***/Scrape')
+
+soup = BeautifulSoup(s.text, 'html.parser')
+
+results = soup.find('div', class_='plain')
+
 print(results.text)
