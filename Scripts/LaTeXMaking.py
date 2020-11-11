@@ -10,18 +10,15 @@ the task report from scraped data.
 """
 
 import subprocess, os
+import time
 
 with open('../Latex/main.tex','w') as file:
-    file.write('\\input{../Latex/Sections/Packages}\n')
-    file.write('\\begin{document}\n')
-    file.write('Hello World!\n')
+    file.write('\\input{./Sections/Top}\n')
+    file.write('This should work with no errors at all!\n')
     file.write('\\end{document}\n')
-    
-os.system('rubber -d ../Latex/main.tex')
-os.system('rubber --clean ../Latex/main.pdf')
-os.system('okular ../Latex/main.pdf')
 
-"""
-Need to fix os.system running in the script directory rather than the working 
-directory!
-"""
+subprocess.Popen(['rubber', '-d', 'main.tex'],  cwd="../Latex")
+time.sleep(2)
+subprocess.Popen(['rubber', '--clean', 'main.tex'],  cwd="../Latex")
+time.sleep(2)
+subprocess.Popen(['okular', 'main.pdf'],  cwd="../Latex")
