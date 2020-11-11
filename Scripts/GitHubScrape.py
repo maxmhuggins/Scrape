@@ -18,36 +18,32 @@ cookies = {
     'logged_in': 'yes',
     '_ga': 'GA1.2.1358488333.1602105251',
     '_device_id': '0509b85cf1c3ff7b00fe8cc6d8e548d6',
-    'user_session': 'VtbtJtqiKeciY730a85xk7No3UnfXClGqzw9yuX8LMeJX-Cl',
-    '__Host-user_session_same_site': 'VtbtJtqiKeciY730a85xk7No3UnfXClGqzw9yuX8LMeJX-Cl',
-    'dotcom_user': '***REMOVED***',
-    'has_recent_activity': '1',
-    '_gat': '1',
     'tz': 'America%2FChicago',
-    '_gh_sess': 'VmP0noDHBMv8SOgs6utZKKiQChYxIoHz4Vzr3xBftOevXQkYyOyYlyIGkvotCPKJB8ECOnF6%2Bj6L0elbokSx7TOq6hAR0wZwAiJADxfZzermatF53X1jOhXPSCFdELthYAUxX8EspdQEjD97PBjASBVlVt3TXJXWv0JGvirx5%2BVWQXvhmYlIMmdzj5CxtfkDZC%2F3QcIbMiRiTIprGAhM%2BgeCDZ%2BXVnI1QfvMaP8OzQL0V2BC9GoVNycD%2BeIcTeNxAtqoW%2F7%2Bk7PZf7hs1G4BLbz%2BFydyRLaVyJ8A00QbvBCc6ITN%2FCgMJSScoD21xILw7WIJynHUAiGrA0%2FQ4I4Do6v2QI6mYtjTMKz3r1mLj8uFMrWHOATnwr9oRkwASPp1qHujcOcUaKTqD1LFTSiqqbUOnr18oIVj55PR1WJGCFs%2B1JScLJm2XAqlXHc6AvRdR2RTEWK8ojmMAWi0ujy33Zes213cGsCS%2FFAv7S2F4bqUNKSiaVYc%2FF%2FvsrgvhNBg2oKCwFTxvCn3AARaS0AxUJkbgYKjAWzy9EKQWwn%2ByVZwqbzfCJfrV%2FbfgzEUbhvmfmgL70IFOqRpCutO7QrM1E4UHlik7Wna9SfGFoqeQal%2BrcSpOd78u9esI6KARPkkVrnNuO1CEE2EiQSxeVHgPj%2BpTOSBaBHFLCmbWQ0ehF4A0D9miS1btULsmQTpMR%2BozaHBtCH%2BLIDpHAQDB1yQJ6Z8Mpd5aC5SUMQu7IKv5VywD0OpTDmt6lBzb8Q5fl5h7g5F%2BIIFAzz%2BcgCGiMRFzpbndv%2B1UZ%2BuqdlNT4b8Mi3k9MhIMnl%2BlmQBQNXjoHsdxixPiw%3D%3D--ebEs3BzXgXrwVBUd--PwMd%2BybIteOA6JRcOyFH%2FA%3D%3D',
+    '_gh_sess': '6rcvH7eC4dJYIcHwdHZ4GR0jVArRRdIWUO1rOpoTq7%2F94FUy43zf6LwiQwtEidsnTVMGu4cKSgZ9h91KS8gqT%2BtGpYsluRYh%2BTDlDIiCO7R7IepHL%2FVhaqab1aRDr8kRK71915XDfbNYr7wAl4qZH8TupZyErzhjdqNWcSeRMrokx1fVPpq7TdjAV2lArrcUTABCdpifFcOMh0SWR7OAMQT4KTPC3aCs2Q2lKLFOV4jI3bSp79ujHXjtAGwXf8oOqN%2Bcy9dT6EOhHLelpgQU4gTv1VRybn6PKndqDZJCIpkZrezTPSQ7k1aiWUAOmvCE2SQ4aJpaCCYblziNO2pqOkehXy%2FnUEFwsgVE6T650sl1HN9ZKcAqSVWmrNZpa5Cm9TB%2FZ%2Fh%2F4CtYMCEyXvWRcjuraZ8YJxtsvM2AFIJOpKKDrsx5%2BLoM0HRwE4RJh9hq9JG8SaQjhK5B8HBUzcqMx648iTtPdV4anksWPDq2Fk7ptQS8W02CJn6d2i6yyabev4OWxtg0MTkTYf%2FtQO9Mk5TEDUzwpSmerW5n6ywFx57uzA%2FA9yDHKz7B0TRAsb3H%2Be5KtVuahnY%2BE0y40Y6LNEJFTB1kX%2BE1PMg%2FQeXTQ%2BbsnNeJtv74XUAcP09GZ9SZ5SnnI%2B4uBk603%2BwynT5SEdhh7byIGJvTFz6CUr2SlWISLg5TuXTpJkxnkRix8lnT%2FKNILfeewFhQS8ulIDvZrRzlwRdsBk5Jhja4obmBXf2AUKFlu2585R6uUawoEmt5mnQeog%3D%3D--ROB7otQ1eE0e09Uw--thHoC3uUVniKEEf2Dwr3Fg%3D%3D',
+    'has_recent_activity': '1',
+    'user_session': 'CN26SHWJIvUynDqIDWGJBjAEE4Cx5q9Y5lRQint-iZki2TFV',
+    '__Host-user_session_same_site': 'CN26SHWJIvUynDqIDWGJBjAEE4Cx5q9Y5lRQint-iZki2TFV',
+    'dotcom_user': '***REMOVED***',
+    '_gat': '1',
 }
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.5',
-    'Referer': 'https://github.com/new',
+    'Referer': 'https://github.com/',
     'Connection': 'keep-alive',
     'Upgrade-Insecure-Requests': '1',
-    'If-None-Match': 'W/"404e7e0e42ecfe926bed70da5c92cf4c"',
-    'Cache-Control': 'max-age=0',
 }
 
-url = 'https://github.com/***REMOVED***/Scrape'
-
-response = requests.get(url, headers=headers, cookies=cookies)
+response = requests.get('https://github.com/***REMOVED***/Scrape', headers=headers, cookies=cookies)
 
 
 soup = BeautifulSoup(response.content, 'html.parser')
 results = soup.find('div', class_='plain')
 print(results.text)
 
-print('========== Another method =======')
+print('========== Another method... that doesnt seem to be working==========')
 
 from bs4 import BeautifulSoup
 import requests
@@ -56,18 +52,19 @@ import requests
 session = requests.Session()
 
 # Create the payload
-payload = {'login_field':'***REMOVED***', 
+payload = {'login':'***REMOVED***', 
           'password':'***REMOVED***'
          }
 
 # Post the payload to the site to log in
 s = session.post("https://github.com/login", data=payload)
+print('login', s.status_code)
 
 # Navigate to the next page and scrape the data
 s = session.get('https://github.com/***REMOVED***/Scrape')
 
-soup = BeautifulSoup(s.text, 'html.parser')
+soup = BeautifulSoup(s.content, 'html.parser')
 
 results = soup.find('div', class_='plain')
-
-print(results.text)
+print('scrape', s.status_code)
+# print(results.text)
