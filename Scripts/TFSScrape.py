@@ -31,17 +31,18 @@ class Scraper:
         return ModifiedURL
 
 
-Username = '***REMOVED***'
-Password = 'uCfE2ahPM8C89CZ'
-URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/Sprint%2015?_a=requirements'
+# Username = '***REMOVED***'
+# Password = 'uCfE2ahPM8C89CZ'
+# URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/Sprint%2015?_a=requirements'
 
-S = Scraper(Username, Password, URL)    
-URL = S.ModifiedURL
-driver = webdriver.Chrome()
-driver.get(URL)
+# S = Scraper(Username, Password, URL)    
+# URL = S.ModifiedURL
+# print(URL)
+# driver = webdriver.Chrome()
+# driver.get(URL)
 
 
-p_element = driver.find_element_by_id(id_='vss_7')
-print(p_element.text)
+# p_element = driver.find_element_by_id(id_='vss_7')
+# print(p_element.text)
 
-driver.close()
+# driver.close()
