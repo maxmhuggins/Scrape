@@ -30,8 +30,10 @@ class Scraper:
             
         ModifiedURL = 'http://' + '{}:{}@'.format(self.Username, self.Password) + NoHTTPURL
         return ModifiedURL
+            
+        
 
-wait = .5
+wait = 1
 Username = '***REMOVED***'
 Password = 'uCfE2ahPM8C89CZ'
 URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded Engineering Collection/Agile Sanctuary/_backlogs'
@@ -41,58 +43,73 @@ URL = S.ModifiedURL
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 
-driver = webdriver.Chrome(chrome_options=options)
+driver = webdriver.Chrome(options=options)
 
 # driver = webdriver.Chrome()
 driver.get(URL)
 time.sleep(wait*2)
-QueriesButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a/span[1]')
+QueriesButton = driver.find_element_by_xpath('//*[@id="mi_237_ms.vss-work-web.work-hub"]/span[1]')
 QueriesButton.click()
 time.sleep(wait)
 
-ColumnOptionsButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[1]/ul/li[14]/span[1]')
+WorkInTest = driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
+WorkInTest.click()
+time.sleep(wait)
+
+ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
 ColumnOptionsButton.click()
 time.sleep(wait)
 
-CreatedDate = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[2]/select/option[39]')
+CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
 CreatedDate.click()
 time.sleep(wait)
 
-ArrowButton = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span')
+ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
 ArrowButton.click()
 time.sleep(wait)
 
-OK = driver.find_element_by_xpath('/html/body/div[4]/div[3]/div/button[1]/span')
+OK = driver.find_element_by_xpath('//*[@id="ok"]')
 OK.click()
 time.sleep(wait)
 
-CreatedDateButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[3]/div[1]/div[1]/div[8]')
-CreatedDateButton.click()
+# GATHER INFO FOR TEST TASKS NOW
+#============================================================================#
+WorkInToDo = driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
+WorkInToDo.click()
+
+
+ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
+ColumnOptionsButton.click()
 time.sleep(wait)
-CreatedDateButton.click()
-time.sleep(wait)
-CreatedDateButton.click()
-time.sleep(wait)
-CreatedDateButton.click()
+
+CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
+CreatedDate.click()
 time.sleep(wait)
 
-# ClickHereToScroll = driver.find_element_by_xpath('//*[@id="row_vss_11_1"]')
-# ClickHereToScroll.send_keys(Keys.PAGE_DOWN);
+ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
+ArrowButton.click()
+time.sleep(wait)
 
-N = 100 #Need to find out how to handle last task in list
-elements = range(0,N)
-for element in elements:
-    new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
-    Task = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-    print('THIS IS TASK #{}'.format(Task.text))
-    print(new_page_element.text)
-    time.sleep(wait/2)
+OK = driver.find_element_by_xpath('//*[@id="ok"]')
+OK.click()
+time.sleep(wait)
+
+# ScrollDown = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[3]/div[2]')
+# ScrollDown.send_keys(Keys.END)
+# N = 100 #Need to find out how to handle last task in list
+# elements = range(0,N)
+# for element in elements:
+#     new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
+#     Task = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+#     print('THIS IS TASK #{}'.format(Task.text))
+#     print(new_page_element.text)
+#     time.sleep(wait/2)
 
 
 
 
 
-
+time.sleep(3)
 
 
 
