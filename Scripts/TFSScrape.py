@@ -9,7 +9,7 @@ This is an attempt to scrape info from tfs to automate the task report.
 
 from selenium import webdriver
 import time
-
+from selenium.webdriver.common.keys import Keys
 
 class Scraper:
     
@@ -31,15 +31,101 @@ class Scraper:
         ModifiedURL = 'http://' + '{}:{}@'.format(self.Username, self.Password) + NoHTTPURL
         return ModifiedURL
 
-
+wait = .5
 Username = '***REMOVED***'
 Password = 'uCfE2ahPM8C89CZ'
-URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20Engineering%20Collection/Agile%20Sanctuary/_backlogs/taskboard/Agile%20Sanctuary%5C2020%5CSprint%2016?_a=requirements'
+URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded Engineering Collection/Agile Sanctuary/_backlogs'
 S = Scraper(Username, Password, URL)    
 URL = S.ModifiedURL
-# print(URL)
-driver = webdriver.Chrome()
+
+options = webdriver.ChromeOptions()
+options.add_argument("--start-maximized")
+
+driver = webdriver.Chrome(chrome_options=options)
+
+# driver = webdriver.Chrome()
 driver.get(URL)
+time.sleep(wait*2)
+QueriesButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a/span[1]')
+QueriesButton.click()
+time.sleep(wait)
+
+ColumnOptionsButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[1]/ul/li[14]/span[1]')
+ColumnOptionsButton.click()
+time.sleep(wait)
+
+CreatedDate = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[2]/select/option[39]')
+CreatedDate.click()
+time.sleep(wait)
+
+ArrowButton = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span')
+ArrowButton.click()
+time.sleep(wait)
+
+OK = driver.find_element_by_xpath('/html/body/div[4]/div[3]/div/button[1]/span')
+OK.click()
+time.sleep(wait)
+
+CreatedDateButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[3]/div[1]/div[1]/div[8]')
+CreatedDateButton.click()
+time.sleep(wait)
+CreatedDateButton.click()
+time.sleep(wait)
+CreatedDateButton.click()
+time.sleep(wait)
+CreatedDateButton.click()
+time.sleep(wait)
+
+# ClickHereToScroll = driver.find_element_by_xpath('//*[@id="row_vss_11_1"]')
+# ClickHereToScroll.send_keys(Keys.PAGE_DOWN);
+
+N = 100 #Need to find out how to handle last task in list
+elements = range(0,N)
+for element in elements:
+    new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
+    Task = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+    print('THIS IS TASK #{}'.format(Task.text))
+    print(new_page_element.text)
+    time.sleep(wait/2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # TotalTasks = range(12088, 12090)
 
@@ -50,10 +136,8 @@ driver.get(URL)
 # #     print(p_element.text)
 # #     time.sleep(1)
 
-p_element = driver.find_element_by_xpath('/html/body/div[3]/div/div[2]/div/div[2]/div/div[3]/div[1]/h1[1]')
 
 
-print(p_element.text)
 # 
 # 
 # tasks = []
