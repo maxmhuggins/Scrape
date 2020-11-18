@@ -164,6 +164,10 @@ The color can be handled quite simply by which section we are scraping from.
 
 Once this information is determined, the strings should be stored in a list
 and the list will be iterated for each section.
+
+In the end, I will need some method of storing old tasks so that the task 
+report has older tasks on it. Possibly just use a .txt file to store the
+old strings and just append them at the end of the tex file.
     
 """
 
