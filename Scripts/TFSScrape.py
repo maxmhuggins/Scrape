@@ -10,6 +10,9 @@ This is an attempt to scrape info from tfs to automate the task report.
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
+import matplotlib.pyplot as plt
+import subprocess, os
+
 
 class Scraper:
     
@@ -41,14 +44,13 @@ S = Scraper(Username, Password, URL)
 URL = S.ModifiedURL
 
 options = webdriver.ChromeOptions()
-options.add_argument("--start-maximized")
+# options.add_argument("--start-maximized")
 
 driver = webdriver.Chrome(options=options)
 
-# driver = webdriver.Chrome()
 driver.get(URL)
 time.sleep(wait*2)
-QueriesButton = driver.find_element_by_xpath('//*[@id="mi_237_ms.vss-work-web.work-hub"]/span[1]')
+QueriesButton = driver.find_element_by_xpath('//*[@id="mi_258_ms.vss-work-web.work-hub"]')
 QueriesButton.click()
 time.sleep(wait)
 
@@ -72,98 +74,107 @@ OK = driver.find_element_by_xpath('//*[@id="ok"]')
 OK.click()
 time.sleep(wait)
 
-# GATHER INFO FOR TEST TASKS NOW
-#============================================================================#
-WorkInToDo = driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
-WorkInToDo.click()
+ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
+ScrollDown.send_keys(Keys.END)
+N = 6 #Need to find out how to handle last task in list
+elements = range(0,N)
+with open('../Latex/TFSTesting.tex','w') as file:
+    
+    file.write('\\input{./Sections/Top}\n')
+    file.write('''\\large
+                \\textsc{{New Tasks}}
+                \\normalsize''')
+
+    file.write('\\begin{enumerate}')
+    
+    for element in elements:
+        new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
+        TaskNumber = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+        TaskDescription = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[3]'.format(element))
+        TaskPerson = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[4]'.format(element))
+        Task = '\\item \\hlcyan{{{}}} {}: {}'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
+        file.write(Task)
+        time.sleep(wait/2)
+        
+    file.write('\\end{enumerate}\\vspace{.5cm}')
+    
+    WorkInToDo = driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
+    WorkInToDo.click()
+    
+    
+    ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
+    ColumnOptionsButton.click()
+    time.sleep(wait)
+    
+    CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
+    CreatedDate.click()
+    time.sleep(wait)
+    
+    ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
+    ArrowButton.click()
+    time.sleep(wait)
+    
+    OK = driver.find_element_by_xpath('//*[@id="ok"]')
+    OK.click()
+    time.sleep(wait)
+    
+    ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
+    ScrollDown.send_keys(Keys.END)
+    
+    file.write('''\\large
+                \\textsc{{Previous Tasks}}
+                \\normalsize''')
+
+    file.write('\\begin{enumerate}')
+    N = 6 #Need to find out how to handle last task in list
+    elements = range(0,N)
+
+    for element in elements:
+        new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
+        TaskNumber = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+        TaskDescription = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[3]'.format(element))
+        TaskPerson = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[4]'.format(element))
+        Task = '\\item \\hlyellow{{{}}} {}: {}'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
+        file.write(Task)
+        time.sleep(wait/2)
+        
+    file.write('\\end{enumerate}\\vspace{.5cm}')
+    
+    5
+    
+    
+    
+    
+    file.write('\\end{document}')
 
 
-ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
-ColumnOptionsButton.click()
-time.sleep(wait)
+"""
+Also need to add in logic to determine the highlight color, which section to put 
+strings in, and handling priority tasks. 
 
-CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
-CreatedDate.click()
-time.sleep(wait)
+can use: time.strptime(x, "%m/%d/%Y %I:%M %p") to get time into workable 
+format for the logic to determine what goes in new tasks.
+Today is given by time.gmtime(). Simple comparisons can be made for example:
+    then = time.strptime(x, "%m/%d/%Y %I:%M %p")
+    now = time.gmtime()
+    then < now
+    True
+    
+The color can be handled quite simply by which section we are scraping from.
 
-ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
-ArrowButton.click()
-time.sleep(wait)
-
-OK = driver.find_element_by_xpath('//*[@id="ok"]')
-OK.click()
-time.sleep(wait)
-
-# ScrollDown = driver.find_element_by_xpath('/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[4]/div[2]/div/div/div/div[1]/div[3]/div[2]')
-# ScrollDown.send_keys(Keys.END)
-# N = 100 #Need to find out how to handle last task in list
-# elements = range(0,N)
-# for element in elements:
-#     new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
-#     Task = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-#     print('THIS IS TASK #{}'.format(Task.text))
-#     print(new_page_element.text)
-#     time.sleep(wait/2)
-
-
-
-
+Once this information is determined, the strings should be stored in a list
+and the list will be iterated for each section.
+    
+"""
 
 time.sleep(3)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# TotalTasks = range(12088, 12090)
-
-# # for task in TotalTasks:
-
-# #     p_element = driver.find_element_by_id('tile-{}'.format(task))
-# #     print('THIS IS TASK #{}'.format(task))
-# #     print(p_element.text)
-# #     time.sleep(1)
-
-
-
-# 
-# 
-# tasks = []
-# for task in driver.find_elements_by_class_name('content-section'):
-#     title = person.find_element_by_xpath('.//div[@class="title"]/a').text
-#     company = person.find_element_by_xpath('.//div[@class="company"]/a').text
-
-#     persons.append({'title': title, 'company': company})
-
-
-
 driver.close()
+
+subprocess.Popen(['rubber', '-d', 'TFSTesting.tex'],  cwd="../Latex")
+time.sleep(2)
+subprocess.Popen(['rubber', '--clean', 'TFSTesting.tex'],  cwd="../Latex")
+time.sleep(3)
+print('Opening document')
+subprocess.Popen(['okular', 'TFSTesting.pdf'],  cwd="../Latex")
