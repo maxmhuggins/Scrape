@@ -81,22 +81,22 @@ elements = range(0,N)
 with open('../Latex/TFSTesting.tex','w') as file:
     
     file.write('\\input{./Sections/Top}\n')
-    file.write('''\\large
-                \\textsc{{New Tasks}}
-                \\normalsize''')
+    file.write('''\\large\n
+\\textsc{{New Tasks}}\n
+\\normalsize\n''')
 
-    file.write('\\begin{enumerate}')
+    file.write('\\begin{enumerate}\n')
     
     for element in elements:
         new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
         TaskNumber = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
         TaskDescription = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[3]'.format(element))
         TaskPerson = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        Task = '\\item \\hlcyan{{{}}} {}: {}'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
+        Task = '\\item \\hlcyan{{{}}} {}: {}\n'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
         file.write(Task)
         time.sleep(wait/2)
         
-    file.write('\\end{enumerate}\\vspace{.5cm}')
+    file.write('\\end{enumerate}\\vspace{.5cm}\n')
     
     WorkInToDo = driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
     WorkInToDo.click()
@@ -121,26 +121,24 @@ with open('../Latex/TFSTesting.tex','w') as file:
     ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
     ScrollDown.send_keys(Keys.END)
     
-    file.write('''\\large
-                \\textsc{{Previous Tasks}}
-                \\normalsize''')
+    file.write('''\\large\n
+\\textsc{{Previous Tasks}}\n
+\\normalsize\n''')
 
-    file.write('\\begin{enumerate}')
-    N = 6 #Need to find out how to handle last task in list
-    elements = range(0,N)
-
+    file.write('\\begin{enumerate}\n')
+    
     for element in elements:
         new_page_element = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]'.format(element))
         TaskNumber = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[1]'.format(element))
         TaskDescription = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[3]'.format(element))
         TaskPerson = driver.find_element_by_xpath('//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        Task = '\\item \\hlyellow{{{}}} {}: {}'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
+        Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(TaskNumber.text, TaskPerson.text, TaskDescription.text)
         file.write(Task)
         time.sleep(wait/2)
         
-    file.write('\\end{enumerate}\\vspace{.5cm}')
+    file.write('\\end{enumerate}\\vspace{.5cm}\n')
     
-    5
+    
     
     
     
