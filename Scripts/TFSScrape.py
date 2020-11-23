@@ -16,259 +16,107 @@ import Scraper
 #============================================================================#
 Username = '***REMOVED***'
 Password = 'uCfE2ahPM8C89CZ'
-Sprint = input('Please input the Sprint number:')
-URL = 'http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/Sprint%20{}?_a=requirements'.format(Sprint)
-DaysSinceLastReport = 5
-SecondsSinceLastReport = DaysSinceLastReport * 60 * 60 * 24
-N = 1000
-elements = range(0,N)
-ToDoCounter = 0
-NewTasks = []
-PreviousTasks = []
-Names = {"David Palos":"PALOS", "Babb, David A":"BABB", "Huggins, Max":"MAX", "Patton, Matthew":"MATTHEW", "Sharma, Kuldeep":"KULDEEP", "Brown, Adam C.":"ADAM", "Pulapa, Rajani K.":"RAJANI", "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", "Pandey, Sampurnanand":"SAMPURNANAND", "Singh, Upasana":"UPASANA", }
-
-
+# Sprint = input('Please input the Sprint number:')
+Sprint=17
+URL = '''http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20
+Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/
+Sprint%20{}?_a=requirements'''.format(Sprint)
+#============================================================================#
 S = Scraper.Scrape(Username, Password, URL)    
 wait = S.wait
 URL = S.ModifiedURL
 #============================================================================#
-options = webdriver.ChromeOptions()
-# options.add_argument("--start-maximized")
-driver = webdriver.Chrome(options=options)
-#============================================================================#
-driver.get(URL)
+S.driver.get(URL)
 time.sleep(wait*2)
-QueriesButton = driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a')
+QueriesButton = S.driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a')
 QueriesButton.click()
 time.sleep(wait)
 #============================================================================#
-WorkInTest = driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
+WorkInToDo = S.driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
+WorkInToDo.click()
+
+S.Handler()
+
+try:
+    for element in S.elements:
+        
+        S.TaskExtractor(element)        
+        
+        Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
+        S.TaskNumber.text, S.Person, S.TaskDescription.text)
+        
+        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
+            S.PreviousTasks.append(Task)
+        else:
+            S.NewTasks.append(Task)
+                
+        S.ToDoCounter += 1
+except NoSuchElementException:
+    pass     
+#============================================================================#
+WorkInTest = S.driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
 WorkInTest.click()
 time.sleep(wait)
 
-
-ColumnOptionsButton = driver.find_element_by_xpath('''//*[@id=
-                                                   "mi_71_column-options"]''')
-ColumnOptionsButton.click()
-time.sleep(wait)
-
-
-CreatedDate = driver.find_element_by_xpath('//*[contains(text(), "Created Date")]')
-CreatedDate.click()
-time.sleep(wait)
-
-
-ArrowButton = driver.find_element_by_xpath('//button[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
-ArrowButton.click()
-time.sleep(wait)
-
-OK = driver.find_element_by_xpath('//*[@id="ok"]')
-OK.click()
-time.sleep(wait)
-
+S.Handler()
 
 try:
-    for element in elements:
-        ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
-        ScrollDown.send_keys(Keys.ARROW_DOWN)
-
-        new_page_element = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]'.format(element))
+    for element in S.elements:
         
-        TaskNumber = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+        S.TaskExtractor(element)        
         
-        TaskDescription = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-        
-        TaskPerson = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        
-        TaskTime = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-        Person = Names[TaskPerson.text]
-        TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-        TaskTimeSec = time.mktime(TaskTime)
-        Today = time.gmtime()
-        TodaySec = time.mktime(Today)
         Task = '\\item \\hlcyan{{{}}} {}: {}\n'.format(
-        TaskNumber.text, Person, TaskDescription.text)
+        S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
-        if TodaySec > TaskTimeSec + SecondsSinceLastReport:
-            PreviousTasks.append(Task)
+        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
+            S.PreviousTasks.append(Task)
         else:
-            NewTasks.append(Task)
+            S.NewTasks.append(Task)
 
 except NoSuchElementException:
     print('There are {} tasks in Test'.format(element + 1))
 #============================================================================#
-WorkInToDo = driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
-WorkInToDo.click()
-
-ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
-ColumnOptionsButton.click()
-time.sleep(wait)
-
-CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
-CreatedDate.click()
-time.sleep(wait)
-
-ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
-ArrowButton.click()
-time.sleep(wait)
-
-OK = driver.find_element_by_xpath('//*[@id="ok"]')
-OK.click()
-time.sleep(wait)
-
-try:
-    for element in elements:
-        ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
-        ScrollDown.send_keys(Keys.ARROW_DOWN)
-        
-        new_page_element = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]'.format(element))
-        
-        TaskNumber = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-        
-        TaskDescription = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-        
-        TaskPerson = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        
-        TaskTime = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-        Person = Names[TaskPerson.text]
-        TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-        TaskTimeSec = time.mktime(TaskTime)
-        Today = time.gmtime()
-        TodaySec = time.mktime(Today)
-        
-        
-        Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
-        TaskNumber.text, Person, TaskDescription.text)
-        if TodaySec > TaskTimeSec + SecondsSinceLastReport:
-            PreviousTasks.append(Task)
-        else:
-            NewTasks.append(Task)
-        
-        ToDoCounter += 1
-except NoSuchElementException:
-    pass     
-#============================================================================#
-WorkInProgress = driver.find_element_by_xpath('//*[@id="tfs_tnli16"]')
+WorkInProgress = S.driver.find_element_by_xpath('//*[@id="tfs_tnli16"]')
 WorkInProgress.click()
-
-ColumnOptionsButton = driver.find_element_by_xpath('//*[@id="mi_71_column-options"]')
-ColumnOptionsButton.click()
 time.sleep(wait)
 
-CreatedDate = driver.find_element_by_xpath('//*[@id="display-available-list"]/option[39]')
-CreatedDate.click()
-time.sleep(wait)
-
-ArrowButton = driver.find_element_by_xpath('//*[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
-ArrowButton.click()
-time.sleep(wait)
-
-OK = driver.find_element_by_xpath('//*[@id="ok"]')
-OK.click()
-time.sleep(wait)
+S.Handler()
 
 try:
-    for element in elements:
-        ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
-        ScrollDown.send_keys(Keys.ARROW_DOWN)
+    for element in S.elements:
         
-        new_page_element = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]'.format(element))
-        
-        TaskNumber = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-        
-        TaskDescription = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-        
-        TaskPerson = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        
-        TaskTime = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-        Person = Names[TaskPerson.text]
-        TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-        TaskTimeSec = time.mktime(TaskTime)
-        Today = time.gmtime()
-        TodaySec = time.mktime(Today)
-        
+        S.TaskExtractor(element)        
         
         Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
-        TaskNumber.text, Person, TaskDescription.text)
-        if TodaySec > TaskTimeSec + SecondsSinceLastReport:
-            PreviousTasks.append(Task)
-        else:
-            NewTasks.append(Task)
+        S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
-        ToDoCounter += 1
+        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
+            S.PreviousTasks.append(Task)
+        else:
+            S.NewTasks.append(Task)
+        
+        S.ToDoCounter += 1
 except NoSuchElementException:
-    print('There are {} tasks in To Do'.format(ToDoCounter))
+    print('There are {} tasks in To Do'.format(S.ToDoCounter))
 #============================================================================#
-WorkInCompleted = driver.find_element_by_xpath('//*[@id="tfs_tnli9"]')
+WorkInCompleted = S.driver.find_element_by_xpath('//*[@id="tfs_tnli9"]')
 WorkInCompleted.click()
 time.sleep(wait)
 
-
-ColumnOptionsButton = driver.find_element_by_xpath('''//*[@id=
-                                                   "mi_71_column-options"]''')
-ColumnOptionsButton.click()
-time.sleep(wait)
-
-
-CreatedDate = driver.find_element_by_xpath('//*[contains(text(), "Created Date")]')
-CreatedDate.click()
-time.sleep(wait)
-
-
-ArrowButton = driver.find_element_by_xpath('//button[@class="add ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')
-ArrowButton.click()
-time.sleep(wait)
-
-OK = driver.find_element_by_xpath('//*[@id="ok"]')
-OK.click()
-time.sleep(wait)
+S.Handler()
 
 try:
-    for element in elements:
-        ScrollDown = driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
-        ScrollDown.send_keys(Keys.ARROW_DOWN)
-
-        new_page_element = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]'.format(element))
+    for element in S.elements:
         
-        TaskNumber = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+        S.TaskExtractor(element)        
         
-        TaskDescription = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-        
-        TaskPerson = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-        
-        TaskTime = driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-        Person = Names[TaskPerson.text]
-        TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-        TaskTimeSec = time.mktime(TaskTime)
-        Today = time.gmtime()
-        TodaySec = time.mktime(Today)
         Task = '\\item \\hlgreen{{{}}} {}: {}\n'.format(
-        TaskNumber.text, Person, TaskDescription.text)
+        S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
-        if TodaySec > TaskTimeSec + SecondsSinceLastReport:
-            PreviousTasks.append(Task)
+        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
+            S.PreviousTasks.append(Task)
         else:
-            NewTasks.append(Task)
+            S.NewTasks.append(Task)
 
 except NoSuchElementException:
     print('There are {} tasks in Completed'.format(element + 1))
@@ -290,7 +138,14 @@ with open('../Latex/TFSTesting.tex','w') as file:
 
     file.write('\\begin{enumerate}\n')
     
-    for Task in NewTasks:
+    for Task in S.NewTasks:
+        Task = list(Task)
+        for i in range(0,len(Task)):
+            if Task[i] == '&':
+                Task[i] = '\&'
+            else:
+                pass
+        Task = ''.join(Task)
         file.write(Task)
 
 
@@ -302,8 +157,16 @@ with open('../Latex/TFSTesting.tex','w') as file:
 
     file.write('\\begin{enumerate}\n')
     
-    for Task in PreviousTasks:
+    for Task in S.PreviousTasks:
+        Task = list(Task)
+        for i in range(0,len(Task)):
+            if Task[i] == '&':
+                Task[i] = '\&'
+            else:
+                pass
+        Task = ''.join(Task)
         file.write(Task)
+                
 
 
     file.write('\\end{enumerate}\\vspace{.5cm}\n')
@@ -323,6 +186,8 @@ In the end, I will need some method of storing old tasks so that the task
 report has older tasks on it. Possibly just use a .txt file to store the
 old strings and just append them at the end of the tex file.
 
+need to replace wait time with an exception handler...
+
 Lastly, need to have user input UN and PASS for security purposes
     
 """
@@ -330,7 +195,7 @@ Lastly, need to have user input UN and PASS for security purposes
 time.sleep(wait)
 
 
-driver.close()
+S.driver.close()
 
 subprocess.Popen(['rubber', '-d', 'TFSTesting.tex'],  cwd="../Latex")
 time.sleep(2)
