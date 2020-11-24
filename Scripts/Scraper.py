@@ -30,7 +30,7 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)
-        self.DaysSinceLastReport = .5
+        self.DaysSinceLastReport = 5
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.N = 1000
         self.elements = range(0,self.N)
@@ -55,14 +55,34 @@ class Scrape:
     def Handler(self):
         
         # self.driver.refresh()
-        time.sleep(self.wait)
-        ColumnOptionsButton = self.driver.find_element_by_xpath('''//*[@id="mi_71_column-options"]''')
-        ColumnOptionsButton.click()
-        time.sleep(self.wait)
+        # time.sleep(self.wait)
         
-        CreatedDate = self.driver.find_element_by_xpath('//*[contains(text(), "Created Date")]')
-        CreatedDate.click()
-        time.sleep(self.wait)
+        result = None
+        tried = 0
+        while result is None:
+            tried += 1
+            try:
+                ColumnOptionsButton = self.driver.find_element_by_xpath('''//*[@id="mi_71_column-options"]''')
+                ColumnOptionsButton.click()
+                result = ColumnOptionsButton
+            except:
+                 pass        
+
+        result = None
+        tried = 0
+        while result is None:
+            tried += 1
+            try:
+                CreatedDate = self.driver.find_element_by_xpath('//*[contains(text(), "Created Date")]')
+                CreatedDate.click()
+                result = CreatedDate
+            except:
+                pass
+            
+            if tried >= 100:
+                break
+
+        time.sleep(self.wait*2)
         
         ArrowButton = self.driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span')
         ArrowButton.click()
@@ -96,10 +116,5 @@ class Scrape:
         self.TaskTimeSec = time.mktime(self.TaskTime)
         Today = time.gmtime()
         self.TodaySec = time.mktime(Today)
-        
-        
-        
-        
-        
         
         
