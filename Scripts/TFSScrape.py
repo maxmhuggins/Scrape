@@ -30,12 +30,11 @@ URL = S.ModifiedURL
 #============================================================================#
 S.driver.get(URL)
 time.sleep(S.wait)
-QueriesButton = S.driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a')
-QueriesButton.click()
-time.sleep(S.wait*2)
+QueriesButton = '/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a'
+S.Clicker(QueriesButton)
 #============================================================================#
-WorkInToDo = S.driver.find_element_by_xpath('//*[@id="tfs_tnli18"]')
-WorkInToDo.click()
+WorkInToDo = '//*[@id="tfs_tnli18"]'
+S.Clicker(WorkInToDo)
 
 S.Handler()
 
@@ -43,14 +42,20 @@ try:
     for element in S.elements:
         
         S.TaskExtractor(element)        
-        
+            
         Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
         S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
         if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            S.PreviousTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.PreviousTasks.append(Task)
         else:
-            S.NewTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.NewTasks.append(Task)
                 
         S.ToDoCounter += 1
 except NoSuchElementException:
@@ -70,9 +75,15 @@ try:
         S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
         if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            S.PreviousTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.PreviousTasks.append(Task)
         else:
-            S.NewTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.NewTasks.append(Task)
         
         S.ToDoCounter += 1
 except NoSuchElementException:
@@ -92,9 +103,15 @@ try:
         S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
         if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            S.PreviousTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.PreviousTasks.append(Task)
         else:
-            S.NewTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.NewTasks.append(Task)
 
 except NoSuchElementException:
     print('There are {} tasks in Test'.format(element + 1))
@@ -113,9 +130,15 @@ try:
         S.TaskNumber.text, S.Person, S.TaskDescription.text)
         
         if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            S.PreviousTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.PreviousTasks.append(Task)
         else:
-            S.NewTasks.append(Task)
+            if S.TaskPriority == 3:
+                S.PriorityTasks.append(Task)
+            else:
+                S.NewTasks.append(Task)
 
 except NoSuchElementException:
     print('There are {} tasks in Completed'.format(element + 1))
@@ -130,6 +153,32 @@ with open('../Latex/TFSTesting.tex','w') as file:
 \\textsc{{GTPS Task Report for Sprint {}}}\\\n
 \\normalsize \\DTMnow\n
 \\end{{center}}\\vspace{{1.5cm}}\n'''.format(Sprint))
+
+
+
+    file.write('''\\large\n
+\\textsc{{Top Priority Tasks}}\n
+\\normalsize\n''')
+    if len(S.PriorityTasks) == 0:
+        file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+    else:
+        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+        
+        for Task in S.PriorityTasks:
+            Task = list(Task)
+            for i in range(0,len(Task)):
+                if Task[i] == '&':
+                    Task[i] = '\&'
+                else:
+                    pass
+            Task = ''.join(Task)
+            file.write(Task)
+    
+    
+        file.write('\\end{enumerate}\\vspace{.5cm}\n')
+
+
+
     
     file.write('''\\large\n
 \\textsc{{New Tasks}}\n
