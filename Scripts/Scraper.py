@@ -27,7 +27,6 @@ class Scrape:
         self.Password = Password
         self.URL = URL
         self.ModifiedURL = self.MakeURL(self.URL)
-        self.wait = 1
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)

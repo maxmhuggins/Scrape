@@ -29,7 +29,6 @@ S = Scraper.Scrape(Username, Password, URL)
 URL = S.ModifiedURL
 #============================================================================#
 S.driver.get(URL)
-time.sleep(S.wait)
 QueriesButton = '/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a'
 S.Clicker(QueriesButton)
 #============================================================================#
@@ -87,7 +86,7 @@ try:
         
         S.ToDoCounter += 1
 except NoSuchElementException:
-    print('There are {} tasks in To Do'.format(S.ToDoCounter))
+    print('There are {} tasks in To Do'.format(S.ToDoCounter-1))
 #============================================================================#
 WorkInTest = S.driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
 WorkInTest.click()
@@ -114,7 +113,7 @@ try:
                 S.NewTasks.append(Task)
 
 except NoSuchElementException:
-    print('There are {} tasks in Test'.format(element + 1))
+    print('There are {} tasks in Test'.format(element))
 #============================================================================#
 WorkInCompleted = S.driver.find_element_by_xpath('//*[@id="tfs_tnli9"]')
 WorkInCompleted.click()
@@ -141,7 +140,7 @@ try:
                 S.NewTasks.append(Task)
 
 except NoSuchElementException:
-    print('There are {} tasks in Completed'.format(element + 1))
+    print('There are {} tasks in Completed'.format(element))
 #============================================================================#
 with open('../Latex/TFSTesting.tex','w') as file:
     
@@ -240,18 +239,18 @@ dont...? I mean no one is looking at the old tasks so who gives.
 
 See about selenium waiting for a refreshed page
 
-Add priority grabs and add a top priority section
-Format title with date
+Figure out how we want to do priorities
+
+Wrap up in pretty bow so others can use.
+    To do this: creaete setup.py file
+                Maybe use py2exe to make an exe file
 """
-
-time.sleep(S.wait)
-
 
 S.driver.close()
 
 subprocess.Popen(['rubber', '-d', 'TFSTesting.tex'],  cwd="../Latex")
-time.sleep(S.wait)
+time.sleep(1)
 subprocess.Popen(['rubber', '--clean', 'TFSTesting.tex'],  cwd="../Latex")
-time.sleep(S.wait)
+time.sleep(1)
 print('Opening document')
 subprocess.Popen(['okular', 'TFSTesting.pdf'],  cwd="../Latex")
