@@ -16,7 +16,7 @@ Names = {
     "Brown, Adam C.":"ADAM", "Pulapa, Rajani K.":"RAJANI", 
     "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", 
     "Pandey, Sampurnanand":"SAMPURNANAND", "Singh, Upasana":"UPASANA", 
-    "Sellers, Eric R": "ERIC"
+    "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN"
     }
 
 class Scrape:
@@ -30,7 +30,7 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)
-        self.DaysSinceLastReport = 1
+        self.DaysSinceLastReport = 4
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.N = 1000
         self.elements = range(0,self.N)
@@ -54,7 +54,7 @@ class Scrape:
     
     
     def Clicker(self, xpath):
-        
+        time.sleep(1)
         result = None
         tried = 0
         while result is None:
@@ -67,34 +67,75 @@ class Scrape:
                 pass
             
             if tried >= 100:
-                print("Whatever you're looking for, isn't here.")
+                print("Couldn't find {}".format(xpath))
                 break        
 
 
     def Handler(self):
         
+        
         ColumnOptions = '//*[@id="mi_71_column-options"]'
         self.Clicker(ColumnOptions)
         
+        
         CreatedDate = '//*[contains(text(), "Created Date")]'
         self.Clicker(CreatedDate)
-    
+        
+        
         ArrowButton = '/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span'
         self.Clicker(ArrowButton)
-
+        
+        
         BacklogPriority = '//*[contains(text(), "Backlog Priority")]'
         self.Clicker(BacklogPriority)
-
+        
+        
         ArrowButton = '/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span'
         self.Clicker(ArrowButton)
-
+        
+        
         OK = '//button[@id="ok"]'
         self.Clicker(OK)
         
     
     def TaskExtractor(self, element):
-        ScrollDown = self.driver.find_element_by_xpath('//*[@id="vss_11"]/div[2]')
+        # going = False
+        # while going == False:
+            
+        #     NumTasks = '//*[@id="vss_186"]/div/div[2]/div[1]'
+        #     NumTasks = self.driver.find_element_by_xpath(NumTasks)
+        #     if NumTasks.text != 'Querying...':
+                
+        #         going = True
+            
+        # NumTasks = NumTasks.text
+        # list(NumTasks)
+        # NumTasks = int(NumTasks[0] + NumTasks[1])
+        
+        # result = None
+        # tried = 0
+        # counter = 0
+        # while result is None:
+        #     tried += 1
+        #     try:
+        time.sleep(.5)
+        xpath = '//*[@id="vss_11"]/div[2]'
+        ScrollDown = self.driver.find_element_by_xpath(xpath)
         ScrollDown.send_keys(Keys.ARROW_DOWN)
+        # result = ScrollDown()
+        #         if result is not None:
+        #             counter += 1
+        #         if counter == NumTasks - 2:
+        #             result = True
+        #             print(counter)
+
+        #     except:
+        #         pass
+            
+            # if tried >= 100:
+            #     print("Couldn't find {}".format(xpath))
+            #     break        
+        time.sleep(.5)
         self.TaskPriority = 0
 
         new_page_element = self.driver.find_element_by_xpath(
