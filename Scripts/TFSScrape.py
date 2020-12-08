@@ -88,7 +88,7 @@ try:
         
         S.ToDoCounter += 1
 except NoSuchElementException:
-    print('There are {} tasks in To Do'.format(S.ToDoCounter-1))
+    print('There are {} tasks in To Do'.format(S.ToDoCounter))
 #============================================================================#
 WorkInTest = S.driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
 WorkInTest.click()
@@ -183,10 +183,10 @@ with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleD
 
 
 
-    
+
     file.write('''\\large\n
-\\textsc{{New Tasks}}\n
-\\normalsize\n''')
+\\textsc{{Tasks Created in the Last {}hrs}}\n
+\\normalsize\n'''.format(str(S.DaysSinceLastReport*24)))
     if len(S.NewTasks) == 0:
         file.write('\\textit{No new tasks to display.}\\vspace{.5cm}\n')
     else:
@@ -233,7 +233,6 @@ with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleD
 #============================================================================#
 
 
-
 """
 Need to comment it out.
 
@@ -251,6 +250,53 @@ Figure out how we want to do priorities
 Wrap up in pretty bow so others can use.
     To do this: creaete setup.py file
                 Maybe use py2exe to make an exe file
+                
+Should use something like this for handling tasks in order to sort them by
+date created. From here: https://www.programiz.com/python-programming/methods/list/sort               
+# sorting using custom key
+employees = [
+    {'Name': 'Alan Turing', 'age': 25, 'salary': 10000},
+    {'Name': 'Sharon Lin', 'age': 30, 'salary': 8000},
+    {'Name': 'John Hopkins', 'age': 18, 'salary': 1000},
+    {'Name': 'Mikhail Tal', 'age': 40, 'salary': 15000},
+]
+
+# custom functions to get employee info
+def get_name(employee):
+    return employee.get('Name')
+
+
+def get_age(employee):
+    return employee.get('age')
+
+
+def get_salary(employee):
+    return employee.get('salary')
+
+
+# sort by name (Ascending order)
+employees.sort(key=get_name)
+print(employees, end='\n\n')
+
+# sort by Age (Ascending order)
+employees.sort(key=get_age)
+print(employees, end='\n\n')
+
+# sort by salary (Descending order)
+employees.sort(key=get_salary, reverse=True)
+print(employees, end='\n\n')    
+
+
+
+
+Something like... this:
+
+Tasks = []
+Tasks.append({'TaskTime':S.TaskTimeSec,'TaskNumber':S.TaskNumber.text, 
+              'Person':S.Person, 'Description':S.TaskDescription.text})
+            
+                
+                
 """
 
 S.driver.close()
