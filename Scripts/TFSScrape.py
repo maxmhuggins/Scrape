@@ -145,7 +145,7 @@ except NoSuchElementException:
     print('There are {} tasks in Completed'.format(element))
 #============================================================================#
 TitleSprint = str(Sprint)
-TitleDate = time.strftime('%m-%d-%y',time.gmtime())
+TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
 
 with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
     
