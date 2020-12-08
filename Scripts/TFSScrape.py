@@ -16,7 +16,7 @@ import Scraper
 #============================================================================#
 Username = '***REMOVED***'
 Password = 'uCfE2ahPM8C89CZ'
-Sprint=17
+Sprint=19
 
 # Sprint = input('Please input the Sprint number\n >')
 # Username = input('Please input your username\n >')
@@ -40,6 +40,7 @@ S.Handler()
 try:
     for element in S.elements:
         
+        
         S.TaskExtractor(element)        
             
         Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
@@ -58,6 +59,7 @@ try:
                 
         S.ToDoCounter += 1
 except NoSuchElementException:
+    print('where is it')
     pass
 #============================================================================#
 WorkInProgress = S.driver.find_element_by_xpath('//*[@id="tfs_tnli16"]')
@@ -142,7 +144,10 @@ try:
 except NoSuchElementException:
     print('There are {} tasks in Completed'.format(element))
 #============================================================================#
-with open('../Latex/TFSTesting.tex','w') as file:
+TitleSprint = str(Sprint)
+TitleDate = time.strftime('%m-%d-%y',time.gmtime())
+
+with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
     
     file.write('\\input{./Sections/Top}\n')
     
@@ -155,26 +160,26 @@ with open('../Latex/TFSTesting.tex','w') as file:
 
 
 
-    file.write('''\\large\n
-\\textsc{{Top Priority Tasks}}\n
-\\normalsize\n''')
-    if len(S.PriorityTasks) == 0:
-        file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
-    else:
-        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+#     file.write('''\\large\n
+# \\textsc{{Top Priority Tasks}}\n
+# \\normalsize\n''')
+#     if len(S.PriorityTasks) == 0:
+#         file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+#     else:
+#         file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
-        for Task in S.PriorityTasks:
-            Task = list(Task)
-            for i in range(0,len(Task)):
-                if Task[i] == '&':
-                    Task[i] = '\&'
-                else:
-                    pass
-            Task = ''.join(Task)
-            file.write(Task)
+#         for Task in S.PriorityTasks:
+#             Task = list(Task)
+#             for i in range(0,len(Task)):
+#                 if Task[i] == '&':
+#                     Task[i] = '\&'
+#                 else:
+#                     pass
+#             Task = ''.join(Task)
+#             file.write(Task)
     
     
-        file.write('\\end{enumerate}\\vspace{.5cm}\n')
+#         file.write('\\end{enumerate}\\vspace{.5cm}\n')
 
 
 
@@ -239,6 +244,8 @@ dont...? I mean no one is looking at the old tasks so who gives.
 
 See about selenium waiting for a refreshed page
 
+Arrange Tasks by date in their respective sections
+
 Figure out how we want to do priorities
 
 Wrap up in pretty bow so others can use.
@@ -248,9 +255,9 @@ Wrap up in pretty bow so others can use.
 
 S.driver.close()
 
-subprocess.Popen(['rubber', '-d', 'TFSTesting.tex'],  cwd="../Latex")
-time.sleep(1)
-subprocess.Popen(['rubber', '--clean', 'TFSTesting.tex'],  cwd="../Latex")
-time.sleep(1)
+subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
+time.sleep(2)
+subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
+time.sleep(2)
 print('Opening document')
-subprocess.Popen(['okular', 'TFSTesting.pdf'],  cwd="../Latex")
+subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(TitleSprint,TitleDate)],  cwd="../Latex")
