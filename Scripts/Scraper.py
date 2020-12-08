@@ -118,7 +118,7 @@ class Scrape:
         # while result is None:
         #     tried += 1
         #     try:
-        time.sleep(.5)
+        # time.sleep(.5)
         xpath = '//*[@id="vss_11"]/div[2]'
         ScrollDown = self.driver.find_element_by_xpath(xpath)
         ScrollDown.send_keys(Keys.ARROW_DOWN)
@@ -135,7 +135,7 @@ class Scrape:
             # if tried >= 100:
             #     print("Couldn't find {}".format(xpath))
             #     break        
-        time.sleep(.5)
+        # time.sleep(.5)
         self.TaskPriority = 0
 
         new_page_element = self.driver.find_element_by_xpath(
