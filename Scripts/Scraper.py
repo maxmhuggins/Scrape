@@ -30,7 +30,7 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)
-        self.DaysSinceLastReport = 4
+        self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.N = 1000
         self.elements = range(0,self.N)
@@ -54,7 +54,7 @@ class Scrape:
     
     
     def Clicker(self, xpath):
-        time.sleep(1)
+        # time.sleep(1)
         result = None
         tried = 0
         while result is None:
@@ -97,7 +97,10 @@ class Scrape:
         OK = '//button[@id="ok"]'
         self.Clicker(OK)
         
-    
+        CreatedDateColumn = '//*[@id="vss_11"]/div[1]/div[1]/div[7]/div[2]'
+        self.Clicker(CreatedDateColumn)
+        self.Clicker(CreatedDateColumn)
+
     def TaskExtractor(self, element):
         # going = False
         # while going == False:
@@ -118,7 +121,7 @@ class Scrape:
         # while result is None:
         #     tried += 1
         #     try:
-        # time.sleep(.5)
+
         xpath = '//*[@id="vss_11"]/div[2]'
         ScrollDown = self.driver.find_element_by_xpath(xpath)
         ScrollDown.send_keys(Keys.ARROW_DOWN)
@@ -135,7 +138,7 @@ class Scrape:
             # if tried >= 100:
             #     print("Couldn't find {}".format(xpath))
             #     break        
-        # time.sleep(.5)
+
         self.TaskPriority = 0
 
         new_page_element = self.driver.find_element_by_xpath(
