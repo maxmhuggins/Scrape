@@ -24,6 +24,8 @@ Sprint=19
 URL = '''http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20
 Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/
 Sprint%20{}?_a=requirements'''.format(Sprint)
+TitleSprint = str(Sprint)
+TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
 #============================================================================#
 S = Scraper.Scrape(Username, Password, URL)    
 URL = S.ModifiedURL
@@ -37,115 +39,40 @@ S.Clicker(WorkInToDo)
 
 S.Handler()
 
-try:
-    for element in S.elements:
-        
-        
-        S.TaskExtractor(element)        
-            
-        Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
-        S.TaskNumber.text, S.Person, S.TaskDescription.text)
-        
-        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.PreviousTasks.append(Task)
-        else:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.NewTasks.append(Task)
-                
-        S.ToDoCounter += 1
-except NoSuchElementException:
-    print('where is it')
-    pass
+S.TaskExtractor('To Do')        
 #============================================================================#
 WorkInProgress = S.driver.find_element_by_xpath('//*[@id="tfs_tnli16"]')
 WorkInProgress.click()
 
 S.Handler()
 
-try:
-    for element in S.elements:
-        
-        S.TaskExtractor(element)        
-        
-        Task = '\\item \\hlyellow{{{}}} {}: {}\n'.format(
-        S.TaskNumber.text, S.Person, S.TaskDescription.text)
-        
-        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.PreviousTasks.append(Task)
-        else:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.NewTasks.append(Task)
-        
-        S.ToDoCounter += 1
-except NoSuchElementException:
-    print('There are {} tasks in To Do'.format(S.ToDoCounter))
+S.TaskExtractor('To Do')        
 #============================================================================#
 WorkInTest = S.driver.find_element_by_xpath('//*[@id="tfs_tnli17"]')
 WorkInTest.click()
 
 S.Handler()
 
-try:
-    for element in S.elements:
-        
-        S.TaskExtractor(element)        
-        
-        Task = '\\item \\hlcyan{{{}}} {}: {}\n'.format(
-        S.TaskNumber.text, S.Person, S.TaskDescription.text)
-        
-        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.PreviousTasks.append(Task)
-        else:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.NewTasks.append(Task)
-
-except NoSuchElementException:
-    print('There are {} tasks in Test'.format(element))
+S.TaskExtractor('Test')        
 #============================================================================#
 WorkInCompleted = S.driver.find_element_by_xpath('//*[@id="tfs_tnli9"]')
 WorkInCompleted.click()
 
 S.Handler()
 
-try:
-    for element in S.elements:
-        
-        S.TaskExtractor(element)        
-        
-        Task = '\\item \\hlgreen{{{}}} {}: {}\n'.format(
-        S.TaskNumber.text, S.Person, S.TaskDescription.text)
-        
-        if S.TodaySec > S.TaskTimeSec + S.SecondsSinceLastReport:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.PreviousTasks.append(Task)
-        else:
-            if S.TaskPriority == 3:
-                S.PriorityTasks.append(Task)
-            else:
-                S.NewTasks.append(Task)
-
-except NoSuchElementException:
-    print('There are {} tasks in Completed'.format(element))
+S.TaskExtractor('Completed')
 #============================================================================#
-TitleSprint = str(Sprint)
-TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
+
+"""
+Sort the tasks here or something idk
+"""
+
+
+
+
+
+
+
 
 with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
     
@@ -160,28 +87,26 @@ with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleD
 
 
 
-#     file.write('''\\large\n
-# \\textsc{{Top Priority Tasks}}\n
-# \\normalsize\n''')
-#     if len(S.PriorityTasks) == 0:
-#         file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
-#     else:
-#         file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+    file.write('''\\large\n
+\\textsc{{Top Priority Tasks}}\n
+\\normalsize\n''')
+    if len(S.PriorityTasks) == 0:
+        file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+    else:
+        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
-#         for Task in S.PriorityTasks:
-#             Task = list(Task)
-#             for i in range(0,len(Task)):
-#                 if Task[i] == '&':
-#                     Task[i] = '\&'
-#                 else:
-#                     pass
-#             Task = ''.join(Task)
-#             file.write(Task)
+        for Task in S.PriorityTasks:
+            Task = list(Task)
+            for i in range(0,len(Task)):
+                if Task[i] == '&':
+                    Task[i] = '\&'
+                else:
+                    pass
+            Task = ''.join(Task)
+            file.write(Task)
     
     
-#         file.write('\\end{enumerate}\\vspace{.5cm}\n')
-
-
+        file.write('\\end{enumerate}\\vspace{.5cm}\n')
 
 
     file.write('''\\large\n
@@ -192,14 +117,15 @@ with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleD
     else:
         file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
-        for Task in S.NewTasks:
-            Task = list(Task)
+        for l in range(0,len(S.NewTasks)):
+            Task = list(S.NewTasks[l]['String'])
             for i in range(0,len(Task)):
                 if Task[i] == '&':
                     Task[i] = '\&'
                 else:
                     pass
             Task = ''.join(Task)
+            
             file.write(Task)
     
     

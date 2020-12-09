@@ -9,6 +9,8 @@ Created on Wed Nov 18 10:42:39 2020
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
+
 
 Names = {
     "David Palos":"PALOS", "Babb, David A":"BABB", "Huggins, Max":"MAX", 
@@ -21,7 +23,6 @@ Names = {
 
 class Scrape:
     
-    
     def __init__(self, Username, Password, URL):
         self.Username = Username
         self.Password = Password
@@ -32,9 +33,9 @@ class Scrape:
         self.driver = webdriver.Chrome(options=self.options)
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
-        self.N = 1000
-        self.elements = range(0,self.N)
-        self.ToDoCounter = 0
+        self.TaskTimeSec = time.mktime(self.TaskTime)
+        self.TodaySec = time.mktime(time.gmtime())
+        self.Tasks = []
         self.NewTasks = []
         self.PreviousTasks = []
         self.PriorityTasks = []
@@ -53,8 +54,19 @@ class Scrape:
         return ModifiedURL
     
     
+    def Parser(self, Section):
+        
+        for i in range(0,len(self.Tasks)):
+            self.Tasks[i]['{}'.format(Section)]
+            
+            """
+            
+            This is fucked. How to do this?????
+            
+            """
+        
     def Clicker(self, xpath):
-        # time.sleep(1)
+
         result = None
         tried = 0
         while result is None:
@@ -72,7 +84,6 @@ class Scrape:
 
 
     def Handler(self):
-        
         
         ColumnOptions = '//*[@id="mi_71_column-options"]'
         self.Clicker(ColumnOptions)
@@ -101,75 +112,49 @@ class Scrape:
         self.Clicker(CreatedDateColumn)
         self.Clicker(CreatedDateColumn)
 
-    def TaskExtractor(self, element):
-        # going = False
-        # while going == False:
+    def TaskExtractor(self, Section):
+        elements = range(0,1000)
+        
+        try:
             
-        #     NumTasks = '//*[@id="vss_186"]/div/div[2]/div[1]'
-        #     NumTasks = self.driver.find_element_by_xpath(NumTasks)
-        #     if NumTasks.text != 'Querying...':
+            for element in elements:
+                xpath = '//*[@id="vss_11"]/div[2]'
+                ScrollDown = self.driver.find_element_by_xpath(xpath)
+                ScrollDown.send_keys(Keys.ARROW_DOWN)
+        
+                self.TaskPriority = 0
+        
+                new_page_element = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]'.format(element))
                 
-        #         going = True
-            
-        # NumTasks = NumTasks.text
-        # list(NumTasks)
-        # NumTasks = int(NumTasks[0] + NumTasks[1])
+                self.TaskNumber = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
         
-        # result = None
-        # tried = 0
-        # counter = 0
-        # while result is None:
-        #     tried += 1
-        #     try:
-
-        xpath = '//*[@id="vss_11"]/div[2]'
-        ScrollDown = self.driver.find_element_by_xpath(xpath)
-        ScrollDown.send_keys(Keys.ARROW_DOWN)
-        # result = ScrollDown()
-        #         if result is not None:
-        #             counter += 1
-        #         if counter == NumTasks - 2:
-        #             result = True
-        #             print(counter)
-
-        #     except:
-        #         pass
-            
-            # if tried >= 100:
-            #     print("Couldn't find {}".format(xpath))
-            #     break        
-
-        self.TaskPriority = 0
-
-        new_page_element = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]'.format(element))
-        
-        self.TaskNumber = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-
-        self.TaskDescription = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-        
-        self.TaskPerson = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
+                self.TaskDescription = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
                 
-        TaskTime = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
+                self.TaskPerson = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
+                        
+                TaskTime = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
+                
+                Priority = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
+                Priority = Priority.text
         
-        Priority = self.driver.find_element_by_xpath(
-            '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
-        Priority = Priority.text
-
-        if Priority == '3':
-            self.TaskPriority = int(Priority)
-        else:
+        
+                self.Person = Names[self.TaskPerson.text]
+                self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
+                
+                Task = {
+                    'Time':self.TaskTime,'Type':Section,'Priority':self.TaskPriority,
+                    'Number':self.TaskNumber,'Person':self.Person,
+                    'Description':self.TaskDescription
+                        }
+                
+                self.Tasks.append(Task)
+                
+        except NoSuchElementException:
             pass
-
-
-        self.Person = Names[self.TaskPerson.text]
-        self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-        self.TaskTimeSec = time.mktime(self.TaskTime)
-        Today = time.gmtime()
-        self.TodaySec = time.mktime(Today)
-                
         
