@@ -67,12 +67,7 @@ S.TaskExtractor('Completed')
 Sort the tasks here or something idk
 """
 
-
-
-
-
-
-
+S.StringMaker()
 
 with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
     

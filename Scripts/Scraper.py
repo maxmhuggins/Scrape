@@ -33,7 +33,6 @@ class Scrape:
         self.driver = webdriver.Chrome(options=self.options)
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
-        self.TaskTimeSec = time.mktime(self.TaskTime)
         self.TodaySec = time.mktime(time.gmtime())
         self.Tasks = []
         self.NewTasks = []
@@ -141,14 +140,14 @@ class Scrape:
                 
                 Priority = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
-                Priority = Priority.text
         
-        
+                self.TaskPriority = Priority.text
                 self.Person = Names[self.TaskPerson.text]
                 self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
+                self.TaskTimeSec = time.mktime(self.TaskTime)
                 
                 Task = {
-                    'Time':self.TaskTime,'Type':Section,'Priority':self.TaskPriority,
+                    'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                     'Number':self.TaskNumber,'Person':self.Person,
                     'Description':self.TaskDescription
                         }
@@ -158,3 +157,31 @@ class Scrape:
         except NoSuchElementException:
             pass
         
+        def StringMaker(self):
+            for i in range(0, len(S.Tasks)):
+                if S.Tasks[i]['TaskType'] == 'To Do':
+                    if S.Task[i]['Priority'] == '1':
+                        priority to do task
+                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
+                        new to do task
+                    else:
+                        old to do task
+                
+                
+                if S.Tasks[i]['TaskType'] == 'Test':
+                    if S.Task[i]['Priority'] == '1':
+                        priority test task
+                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
+                        new test task
+                    else:
+                        old test task
+            
+            
+                if S.Tasks[i]['TaskType'] == 'Completed':
+                    if S.Task[i]['Priority'] == '1':
+                        priority completed task
+                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
+                        new completed task
+                    else:
+                        old completed task
+                    
