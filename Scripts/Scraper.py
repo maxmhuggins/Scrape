@@ -170,7 +170,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
                     self.NewTasks.append(
                         '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
@@ -191,7 +191,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
                     self.NewTasks.append(
                         '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
@@ -212,7 +212,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
                     self.NewTasks.append(
                         '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
