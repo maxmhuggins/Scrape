@@ -166,22 +166,22 @@ class Scrape:
                 if self.Tasks[i]['Priority'] == '1':
                     
                     self.PriorityTasks.append(
-                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
-                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                 else:
                     self.PreviousTasks.append(
-                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
             
-            
+        for i in range(0, len(self.Tasks)):
             if self.Tasks[i]['Type'] == 'Test':
                 hl = 'cyan'
                 if self.Tasks[i]['Priority'] == '1':
@@ -191,7 +191,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
                         '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
@@ -202,7 +202,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
         
-        
+        for i in range(0, len(self.Tasks)):
             if self.Tasks[i]['Type'] == 'Completed':
                 hl = 'green'
                 if self.Tasks[i]['Priority'] == '1':
@@ -212,7 +212,7 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-                elif self.Tasks[i]['Time'] + self.TodaySec < self.SecondsSinceLastReport:
+                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
                         '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
