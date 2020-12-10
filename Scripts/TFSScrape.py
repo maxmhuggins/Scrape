@@ -113,7 +113,7 @@ with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleD
         file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
         for l in range(0,len(S.NewTasks)):
-            Task = list(S.NewTasks[l]['String'])
+            Task = list(S.NewTasks[l])
             for i in range(0,len(Task)):
                 if Task[i] == '&':
                     Task[i] = '\&'
@@ -224,8 +224,8 @@ Tasks.append({'TaskTime':S.TaskTimeSec,'TaskNumber':S.TaskNumber.text,
 S.driver.close()
 
 subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
-time.sleep(2)
+time.sleep(5)
 subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
-time.sleep(2)
+time.sleep(5)
 print('Opening document')
 subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(TitleSprint,TitleDate)],  cwd="../Latex")

@@ -10,7 +10,7 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-
+import operator
 
 Names = {
     "David Palos":"PALOS", "Babb, David A":"BABB", "Huggins, Max":"MAX", 
@@ -65,7 +65,7 @@ class Scrape:
             """
         
     def Clicker(self, xpath):
-
+        time.sleep(.5)
         result = None
         tried = 0
         while result is None:
@@ -148,8 +148,8 @@ class Scrape:
                 
                 Task = {
                     'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
-                    'Number':self.TaskNumber,'Person':self.Person,
-                    'Description':self.TaskDescription
+                    'Number':self.TaskNumber.text,'Person':self.Person,
+                    'Description':self.TaskDescription.text
                         }
                 
                 self.Tasks.append(Task)
@@ -157,31 +157,75 @@ class Scrape:
         except NoSuchElementException:
             pass
         
-        def StringMaker(self):
-            for i in range(0, len(S.Tasks)):
-                if S.Tasks[i]['TaskType'] == 'To Do':
-                    if S.Task[i]['Priority'] == '1':
-                        priority to do task
-                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
-                        new to do task
-                    else:
-                        old to do task
-                
-                
-                if S.Tasks[i]['TaskType'] == 'Test':
-                    if S.Task[i]['Priority'] == '1':
-                        priority test task
-                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
-                        new test task
-                    else:
-                        old test task
-            
-            
-                if S.Tasks[i]['TaskType'] == 'Completed':
-                    if S.Task[i]['Priority'] == '1':
-                        priority completed task
-                    elif S.Tasks[i]['Time'] - S.TodaySec < SecondsSinceLastReport:
-                        new completed task
-                    else:
-                        old completed task
+    def StringMaker(self):
+        self.Tasks.sort(key=operator.itemgetter('Time'), reverse=True)
+        
+        for i in range(0, len(self.Tasks)):
+            if self.Tasks[i]['Type'] == 'To Do':
+                hl = 'yellow'
+                if self.Tasks[i]['Priority'] == '1':
                     
+                    self.PriorityTasks.append(
+                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                    
+                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                    self.NewTasks.append(
+                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                else:
+                    self.PreviousTasks.append(
+                        '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+            
+            
+            if self.Tasks[i]['Type'] == 'Test':
+                hl = 'cyan'
+                if self.Tasks[i]['Priority'] == '1':
+                    
+                    self.PriorityTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                    
+                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                    self.NewTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                else:
+                    self.PreviousTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+        
+        
+            if self.Tasks[i]['Type'] == 'Completed':
+                hl = 'green'
+                if self.Tasks[i]['Priority'] == '1':
+                    
+                    self.PriorityTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                    
+                elif self.Tasks[i]['Time'] - self.TodaySec < self.SecondsSinceLastReport:
+                    self.NewTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                else:
+                    self.PreviousTasks.append(
+                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
+                        self.Tasks[i]['Description']))
+                    
+# \item \hlyellow{12157} ERIC: Could Not Finish Flow
+
+
+# '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
+#     hl, self.Task[i]['Number'], self.Task[i]['Person'], 
+#     self.Task[i]['Description'])
