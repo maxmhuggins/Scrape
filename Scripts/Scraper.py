@@ -17,7 +17,7 @@ Names = {
     "Patton, Matthew":"MATTHEW", "Sharma, Kuldeep":"KULDEEP", 
     "Brown, Adam C.":"ADAM", "Pulapa, Rajani K.":"RAJANI", 
     "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", 
-    "Pandey, Sampurnanand":"SAMPURNANAND", "Singh, Upasana":"UPASANA", 
+    "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN"
     }
 
