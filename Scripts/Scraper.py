@@ -66,7 +66,7 @@ class Scrape:
             """
         
     def Clicker(self, xpath):
-        # time.sleep(.5)
+        time.sleep(.5)
         result = None
         tried = 0
         while result is None:
@@ -121,9 +121,7 @@ class Scrape:
                 xpath = '//*[@id="vss_11"]/div[2]'
                 ScrollDown = self.driver.find_element_by_xpath(xpath)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
-        
-                self.TaskPriority = 0
-        
+                
                 new_page_element = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]'.format(element))
                 
@@ -165,11 +163,16 @@ class Scrape:
             if self.Tasks[i]['Type'] == 'To Do':
                 hl = 'yellow'
                 if self.Tasks[i]['Priority'] == '1':
-                    
+
                     self.PriorityTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        {
+                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                        self.Tasks[i]['Description']),
+                        
+                        'Priority':self.Tasks[i]['Priority']
+                        }
+                                              )
                     
                 elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
@@ -188,9 +191,14 @@ class Scrape:
                 if self.Tasks[i]['Priority'] == '1':
                     
                     self.PriorityTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        {
+                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                        self.Tasks[i]['Description']),
+                        
+                        'Priority':self.Tasks[i]['Priority']
+                        }
+                                              )
                     
                 elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
@@ -209,9 +217,14 @@ class Scrape:
                 if self.Tasks[i]['Priority'] == '1':
                     
                     self.PriorityTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
+                        {
+                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                        self.Tasks[i]['Description']),
+                        
+                        'Priority':self.Tasks[i]['Priority']
+                        }
+                                              )
                     
                 elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
                     self.NewTasks.append(
@@ -223,7 +236,8 @@ class Scrape:
                         '\\item \\hl{}{{{}}} {}: {}'.format(
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
-                    
+        
+        self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=True)
 
 """
 Make the lists have a string and priority, then sort priority tasks by their

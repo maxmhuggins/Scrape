@@ -88,6 +88,7 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSp
         file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
         for Task in S.PriorityTasks:
+            Task = Task['String']
             Task = list(Task)
             for i in range(0,len(Task)):
                 if Task[i] == '&':
