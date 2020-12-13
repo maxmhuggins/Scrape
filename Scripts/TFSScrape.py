@@ -7,10 +7,7 @@ Created on Wed Nov  4 19:06:22 2020
 This is an attempt to scrape info from tfs to automate the task report.
 """
 #============================================================================#
-from selenium import webdriver
 import time
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
 import subprocess
 import Scraper       
 #============================================================================#
@@ -69,9 +66,9 @@ Sort the tasks here or something idk
 
 S.StringMaker()
 
-with open('../Latex/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
+with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
     
-    file.write('\\input{./Sections/Top}\n')
+    file.write('\\input{../Latex/Sections/Top}\n')
     
     file.write('''\\begin{{document}}\n
 \\begin{{center}}\n
@@ -223,9 +220,9 @@ Tasks.append({'TaskTime':S.TaskTimeSec,'TaskNumber':S.TaskNumber.text,
 
 S.driver.close()
 
-subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
+subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
-subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../Latex")
+subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
 print('Opening document')
-subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(TitleSprint,TitleDate)],  cwd="../Latex")
+subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")

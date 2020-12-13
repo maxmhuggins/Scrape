@@ -18,7 +18,8 @@ Names = {
     "Brown, Adam C.":"ADAM", "Pulapa, Rajani K.":"RAJANI", 
     "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", 
     "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
-    "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN"
+    "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
+    "LeCrone, Sean": "SEAN"
     }
 
 class Scrape:
@@ -65,7 +66,7 @@ class Scrape:
             """
         
     def Clicker(self, xpath):
-        time.sleep(.5)
+        # time.sleep(.5)
         result = None
         tried = 0
         while result is None:
@@ -223,9 +224,8 @@ class Scrape:
                         hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
                         self.Tasks[i]['Description']))
                     
-# \item \hlyellow{12157} ERIC: Could Not Finish Flow
 
-
-# '\\item \\hl{{}}{{}} {{}}: {{}}'.format(
-#     hl, self.Task[i]['Number'], self.Task[i]['Person'], 
-#     self.Task[i]['Description'])
+"""
+Make the lists have a string and priority, then sort priority tasks by their
+priority number. Then simply use the string for the actual document.
+"""
