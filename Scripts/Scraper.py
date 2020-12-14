@@ -32,7 +32,7 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)
-        self.DaysSinceLastReport = 1
+        self.DaysSinceLastReport = 3
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.mktime(time.gmtime())
         self.Tasks = []
@@ -52,21 +52,9 @@ class Scrape:
             
         ModifiedURL = 'http://' + '{}:{}@'.format(self.Username, self.Password) + NoHTTPURL
         return ModifiedURL
-    
-    
-    def Parser(self, Section):
-        
-        for i in range(0,len(self.Tasks)):
-            self.Tasks[i]['{}'.format(Section)]
             
-            """
-            
-            This is fucked. How to do this?????
-            
-            """
-        
     def Clicker(self, xpath):
-        time.sleep(.5)
+        # time.sleep(.5)
         result = None
         tried = 0
         while result is None:
@@ -82,6 +70,32 @@ class Scrape:
                 print("Couldn't find {}".format(xpath))
                 break        
 
+    def Appender(self, Tasks, hl):
+        T = Tasks['Priority']
+        print(T)
+        # time.sleep(15)
+        if T != ' ':
+
+            self.PriorityTasks.append(
+                {
+                'String':'\\item \\hl{}{{{}}} {}: {}'.format(
+                hl, Tasks['Number'], Tasks['Person'], 
+                Tasks['Description']),
+                
+                'Priority':Tasks['Priority']
+                }
+                                      )
+            
+        elif Tasks['Time'] + self.SecondsSinceLastReport > self.TodaySec:
+            self.NewTasks.append(
+                '\\item \\hl{}{{{}}} {}: {}'.format(
+                hl, Tasks['Number'], Tasks['Person'], 
+                Tasks['Description']))
+        else:
+            self.PreviousTasks.append(
+                '\\item \\hl{}{{{}}} {}: {}'.format(
+                hl, Tasks['Number'], Tasks['Person'], 
+                Tasks['Description']))
 
     def Handler(self):
         
@@ -160,84 +174,26 @@ class Scrape:
         self.Tasks.sort(key=operator.itemgetter('Time'), reverse=True)
         
         for i in range(0, len(self.Tasks)):
+            Tasks = self.Tasks[i]
             if self.Tasks[i]['Type'] == 'To Do':
                 hl = 'yellow'
-                if self.Tasks[i]['Priority'] == '1':
-
-                    self.PriorityTasks.append(
-                        {
-                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']),
-                        
-                        'Priority':self.Tasks[i]['Priority']
-                        }
-                                              )
-                    
-                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
-                    self.NewTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
-                else:
-                    self.PreviousTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                self.Appender(Tasks, hl)
+                
             
         for i in range(0, len(self.Tasks)):
+            Tasks = self.Tasks[i]
             if self.Tasks[i]['Type'] == 'Test':
                 hl = 'cyan'
-                if self.Tasks[i]['Priority'] == '1':
-                    
-                    self.PriorityTasks.append(
-                        {
-                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']),
-                        
-                        'Priority':self.Tasks[i]['Priority']
-                        }
-                                              )
-                    
-                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
-                    self.NewTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
-                else:
-                    self.PreviousTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                self.Appender(Tasks, hl)
+
         
         for i in range(0, len(self.Tasks)):
+            Tasks = self.Tasks[i]
             if self.Tasks[i]['Type'] == 'Completed':
                 hl = 'green'
-                if self.Tasks[i]['Priority'] == '1':
-                    
-                    self.PriorityTasks.append(
-                        {
-                        'String':'\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']),
-                        
-                        'Priority':self.Tasks[i]['Priority']
-                        }
-                                              )
-                    
-                elif self.Tasks[i]['Time'] + self.SecondsSinceLastReport > self.TodaySec:
-                    self.NewTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
-                else:
-                    self.PreviousTasks.append(
-                        '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl, self.Tasks[i]['Number'], self.Tasks[i]['Person'], 
-                        self.Tasks[i]['Description']))
+                self.Appender(Tasks, hl)
         
-        self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=True)
+        self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
 
 """
 Make the lists have a string and priority, then sort priority tasks by their
