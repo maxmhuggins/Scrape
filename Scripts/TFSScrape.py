@@ -28,7 +28,8 @@ S = Scraper.Scrape(Username, Password, URL)
 URL = S.ModifiedURL
 #============================================================================#
 S.driver.get(URL)
-QueriesButton = '/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a'
+QueriesButton = """/html/body/div[2]/div/div[1]/table[2]/tbody/tr/td/div[1]/
+div/table/tbody/tr/td[1]/div[2]/div/ul/li[2]/a"""
 S.Clicker(QueriesButton)
 #============================================================================#
 WorkInToDo = '//*[@id="tfs_tnli18"]'
@@ -61,7 +62,8 @@ S.TaskExtractor('Completed')
 #============================================================================#
 S.StringMaker()
 
-with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate),'w') as file:
+with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
+        TitleSprint,TitleDate),'w') as file:
     
     file.write('\\input{../Latex/Sections/Top}\n')
     
@@ -80,7 +82,8 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSp
     if len(S.PriorityTasks) == 0:
         file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
     else:
-        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+        file.write(
+            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
         for Task in S.PriorityTasks:
             Task = Task['String']
@@ -103,7 +106,8 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSp
     if len(S.NewTasks) == 0:
         file.write('\\textit{No new tasks to display.}\\vspace{.5cm}\n')
     else:
-        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+        file.write(
+            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
         for l in range(0,len(S.NewTasks)):
             Task = list(S.NewTasks[l])
@@ -126,7 +130,8 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(TitleSp
     if len(S.PreviousTasks) == 0:
         file.write('\\textit{No previous tasks to display.}\\vspace{.5cm}\n')
     else:
-        file.write('\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+        file.write(
+            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
         
         for Task in S.PreviousTasks:
             Task = list(Task)
@@ -163,9 +168,12 @@ Wrap up in pretty bow so others can use.
 
 S.driver.close()
 
-subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(
+    TitleSprint,TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
-subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(
+    TitleSprint,TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
 print('Opening document')
-subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(
+    TitleSprint,TitleDate)],  cwd="../GeneratedReports")

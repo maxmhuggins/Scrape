@@ -5,13 +5,17 @@ Created on Wed Nov 18 10:42:39 2020
 
 @author: ***REMOVED***
 """
-
+#============================================================================#
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import operator
-
+#============================================================================#
+"""
+This is the names dictionary. It holds all of the TFS names and assigns them
+nicknames to be displayed on the report.
+"""
 Names = {
     "David Palos":"PALOS", "Babb, David A":"BABB", "Huggins, Max":"MAX", 
     "Patton, Matthew":"MATTHEW", "Sharma, Kuldeep":"KULDEEP", 
@@ -21,7 +25,11 @@ Names = {
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
     "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE"
     }
-
+#============================================================================#
+"""
+The Scrape class handles most of the scraping from TFS. It also includes some
+variables for the report.
+"""
 class Scrape:
     
     def __init__(self, Username, Password, URL):
@@ -39,8 +47,10 @@ class Scrape:
         self.NewTasks = []
         self.PreviousTasks = []
         self.PriorityTasks = []
+     
         
-    
+    """The MakeURL method will make an authentication URL so you can get into
+    TFS without having to manually log in."""
     def MakeURL(self, URL):
         
         NoHTTPURL = ''
@@ -52,7 +62,10 @@ class Scrape:
             
         ModifiedURL = 'http://' + '{}:{}@'.format(self.Username, self.Password) + NoHTTPURL
         return ModifiedURL
-            
+    
+    
+    """The Clicker method literally clicks on an xpath element. There is a 
+    try, except in place for unloaded elements."""       
     def Clicker(self, xpath):
         
         result = None
@@ -69,7 +82,10 @@ class Scrape:
             if tried >= 100:
                 print("Couldn't find {}".format(xpath))
                 break        
-
+      
+            
+    """The Appender method will make a dictionary for each task that includes
+    priority and the string that will get put into the latex document."""
     def Appender(self, Tasks, hl):
         
         T = Tasks['Priority']
@@ -95,7 +111,10 @@ class Scrape:
                 '\\item \\hl{}{{{}}} {}: {}'.format(
                 hl, Tasks['Number'], Tasks['Person'], 
                 Tasks['Description']))
-
+    
+    
+    """The Handler method makes a unique query that includes the date the task
+    was created as well as the backlog priority."""
     def Handler(self):
         
         ColumnOptions = '//*[@id="mi_71_column-options"]'
@@ -106,7 +125,8 @@ class Scrape:
         self.Clicker(CreatedDate)
         
         
-        ArrowButton = '/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span'
+        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
+        div[3]/div[1]/button/span/span"""
         self.Clicker(ArrowButton)
         
         
@@ -114,7 +134,8 @@ class Scrape:
         self.Clicker(BacklogPriority)
         
         
-        ArrowButton = '/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[3]/div[1]/button/span/span'
+        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
+        div[3]/div[1]/button/span/span"""
         self.Clicker(ArrowButton)
         
         
@@ -124,7 +145,10 @@ class Scrape:
         CreatedDateColumn = '//*[@id="vss_11"]/div[1]/div[1]/div[7]/div[2]'
         self.Clicker(CreatedDateColumn)
         self.Clicker(CreatedDateColumn)
-
+    
+    
+    """The TaskExtractor method grabs all of the relevant data from TFS
+    regarding the task, stores it in a dictionary and appends it to a list."""
     def TaskExtractor(self, Section):
         
         elements = range(0,1000)
@@ -166,7 +190,10 @@ class Scrape:
                 
         except NoSuchElementException:
             pass
-        
+    
+    
+    """The StringMaker method will sort the list of dictionaries by date,
+    assign colors to the highlighter, then send the task to the Appender"""
     def StringMaker(self):
         
         self.Tasks.sort(key=operator.itemgetter('Time'), reverse=True)
