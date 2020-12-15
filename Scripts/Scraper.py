@@ -19,7 +19,7 @@ Names = {
     "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", 
     "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
-    "LeCrone, Sean": "SEAN"
+    "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE"
     }
 
 class Scrape:
@@ -32,7 +32,7 @@ class Scrape:
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
         self.driver = webdriver.Chrome(options=self.options)
-        self.DaysSinceLastReport = 3
+        self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.mktime(time.gmtime())
         self.Tasks = []
@@ -54,7 +54,7 @@ class Scrape:
         return ModifiedURL
             
     def Clicker(self, xpath):
-        # time.sleep(.5)
+        
         result = None
         tried = 0
         while result is None:
@@ -71,9 +71,8 @@ class Scrape:
                 break        
 
     def Appender(self, Tasks, hl):
+        
         T = Tasks['Priority']
-        print(T)
-        # time.sleep(15)
         if T != ' ':
 
             self.PriorityTasks.append(
@@ -127,6 +126,7 @@ class Scrape:
         self.Clicker(CreatedDateColumn)
 
     def TaskExtractor(self, Section):
+        
         elements = range(0,1000)
         
         try:
@@ -135,10 +135,7 @@ class Scrape:
                 xpath = '//*[@id="vss_11"]/div[2]'
                 ScrollDown = self.driver.find_element_by_xpath(xpath)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
-                
-                new_page_element = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]'.format(element))
-                
+                                
                 self.TaskNumber = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
         
@@ -171,6 +168,7 @@ class Scrape:
             pass
         
     def StringMaker(self):
+        
         self.Tasks.sort(key=operator.itemgetter('Time'), reverse=True)
         
         for i in range(0, len(self.Tasks)):
@@ -194,8 +192,3 @@ class Scrape:
                 self.Appender(Tasks, hl)
         
         self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
-
-"""
-Make the lists have a string and priority, then sort priority tasks by their
-priority number. Then simply use the string for the actual document.
-"""
