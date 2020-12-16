@@ -28,7 +28,7 @@ Names = {
 #============================================================================#
 """
 The Scrape class handles most of the scraping from TFS. It also includes some
-variables for the report.
+attributes for the report and handles task dictionaries.
 """
 class Scrape:
     
@@ -90,16 +90,18 @@ class Scrape:
         
         T = Tasks['Priority']
         if T != ' ':
-
-            self.PriorityTasks.append(
-                {
-                'String':'\\item \\hl{}{{{}}} {}: {}'.format(
-                hl, Tasks['Number'], Tasks['Person'], 
-                Tasks['Description']),
-                
-                'Priority':Tasks['Priority']
-                }
-                                      )
+            if Tasks['Type'] == 'Completed':
+                pass
+            else:
+                self.PriorityTasks.append(
+                    {
+                    'String':'\\item \\hl{}{{{}}} {}: {}'.format(
+                    hl, Tasks['Number'], Tasks['Person'], 
+                    Tasks['Description']),
+                    
+                    'Priority':Tasks['Priority']
+                    }
+                                          )
             
         elif Tasks['Time'] + self.SecondsSinceLastReport > self.TodaySec:
             self.NewTasks.append(
