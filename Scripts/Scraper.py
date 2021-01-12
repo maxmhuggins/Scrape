@@ -32,9 +32,14 @@ attributes for the report and handles task dictionaries.
 """
 class Scrape:
     
-    def __init__(self, Username, Password, URL):
+    def __init__(self, Username, Password, Sprint, URL):
+        """Either input name here, or uncomment the input commands and do it on 
+        startup. The latter is more secure."""
         self.Username = Username
         self.Password = Password
+        self.Sprint = Sprint    
+        self.TitleSprint = str(self.Sprint)
+        self.TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
         self.URL = URL
         self.ModifiedURL = self.MakeURL(self.URL)
         self.options = webdriver.ChromeOptions()
@@ -47,7 +52,6 @@ class Scrape:
         self.NewTasks = []
         self.PreviousTasks = []
         self.PriorityTasks = []
-     
         
     """The MakeURL method will make an authentication URL so you can get into
     TFS without having to manually log in."""
@@ -105,14 +109,24 @@ class Scrape:
             
         elif Tasks['Time'] + self.SecondsSinceLastReport > self.TodaySec:
             self.NewTasks.append(
-                '\\item \\hl{}{{{}}} {}: {}'.format(
-                hl, Tasks['Number'], Tasks['Person'], 
-                Tasks['Description']))
+                    {
+                    'String':'\\item \\hl{}{{{}}} {}: {}'.format(
+                    hl, Tasks['Number'], Tasks['Person'], 
+                    Tasks['Description']),
+                    
+                    'Priority':None
+                    }
+                                          )
         else:
             self.PreviousTasks.append(
-                '\\item \\hl{}{{{}}} {}: {}'.format(
-                hl, Tasks['Number'], Tasks['Person'], 
-                Tasks['Description']))
+                    {
+                    'String':'\\item \\hl{}{{{}}} {}: {}'.format(
+                    hl, Tasks['Number'], Tasks['Person'], 
+                    Tasks['Description']),
+                    
+                    'Priority':None
+                    }
+                                          )
     
     
     """The Handler method makes a unique query that includes the date the task
@@ -222,4 +236,90 @@ class Scrape:
         
         self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
         
+    
+    def StringFixer(self, Task):
+        Task = Task['String']
+        Task = list(Task)
+        for i in range(0,len(Task)):
+            if Task[i] == '&':
+                Task[i] = '\&'
+            if Task[i] == '$':
+                Task[i] = '\$'
+            if Task[i] == '_':
+                Task[i] = '\_'                
+            else:
+                pass
+        Task = ''.join(Task)
+        return Task
+    
+    
+    def SectionMaker(self, file, CurrentCategory):
+        if len(CurrentCategory) == 0:
+            file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+        else:
+            file.write(
+                '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+            
+            for Task in CurrentCategory:
+                file.write(self.StringFixer(Task) + '\n')
         
+        
+            file.write('\\end{enumerate}\\vspace{.5cm}\n')
+    
+    def ReportGenerator(self):
+        with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
+                self.TitleSprint, self.TitleDate),'w') as file:
+            
+            file.write('''\\documentclass[letterpaper, 12pt]{article}\n
+        \\usepackage[utf8]{inputenc}\n
+        \\usepackage[margin=1in,letterpaper]{geometry}\n
+        \\usepackage[stretch=10]{microtype}\n
+        \\usepackage[table,xcdraw]{xcolor}\n
+        \\usepackage{listings}\n
+        \\usepackage{color}\n
+        \\usepackage{xcolor, soul}\n
+        \\usepackage{enumitem}\n
+        \\usepackage[en-GB,showseconds=false, showzone=false]{datetime2}\n
+        \\definecolor{navy}{rgb}{245,156,74}\n
+        \\definecolor{codegreen}{rgb}{0,0.6,0}\n
+        \\definecolor{codegray}{rgb}{0.5,0.5,0.5}\n
+        \\definecolor{codepurple}{rgb}{0.58,0,0.82}\n
+        \\definecolor{backcolour}{rgb}{0.95,0.95,0.92}\n
+        \\DeclareRobustCommand{\\hlcyan}[1]{{\\sethlcolor{cyan}\\hl{#1}}}\n
+        \\DeclareRobustCommand{\\hlyellow}[1]{{\\sethlcolor{yellow}\\hl{#1}}}\n
+        \\DeclareRobustCommand{\\hlgreen}[1]{{\\sethlcolor{green}\\hl{#1}}}\n
+        \\DeclareRobustCommand{\\hlpurple}[1]{{\\sethlcolor{codepurple}\\hl{#1}}}\n''')
+            
+            file.write('''\\begin{{document}}\n
+        \\begin{{center}}\n
+        \\Large\n
+        \\textsc{{GTPS Task Report for Sprint {}}}\\\n
+        \\normalsize \\DTMnow\n
+        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(self.Sprint))
+        
+        
+        
+            file.write('''\\large\n
+        \\textsc{{Top Priority Tasks}}\n
+        \\normalsize\n''')
+        
+            CurrentCategory = self.PriorityTasks
+            self.SectionMaker(file, CurrentCategory)
+        
+            file.write('''\\large\n
+        \\textsc{{Tasks Created in the Last {}hrs}}\n
+        \\normalsize\n'''.format(str(self.DaysSinceLastReport*24)))
+        
+            CurrentCategory = self.NewTasks
+            self.SectionMaker(file, CurrentCategory)
+        
+            file.write('''\\large\n
+        \\textsc{{Previous Tasks}}\n
+        \\normalsize\n''')
+        
+            CurrentCategory = self.PreviousTasks
+            self.SectionMaker(file, CurrentCategory)
+                        
+        
+        
+            file.write('\\end{document}')

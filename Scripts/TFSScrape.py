@@ -15,14 +15,10 @@ import time
 import subprocess
 import Scraper       
 #============================================================================#
-"""Either input name here, or uncomment the input commands and do it on 
-startup. The latter is more secure."""
-
 Username = '***REMOVED***'
 Password = '***REMOVED***'
-Sprint=1
-
-# Sprint = input('Please input the Sprint number\n >')
+Sprint = 1     
+# Sprint = input('Please input the Sprint number\n >')       
 # Username = input('Please input your username\n >')
 # Password = input('Please input your password\n >')
 #============================================================================#
@@ -33,11 +29,9 @@ authenticate on the website."""
 URL = '''http://conw-mstf-01-pv.snaponglobal.com:8080/tfs/Embedded%20
 Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/
 requirements'''
-TitleSprint = str(Sprint)
-TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
 #============================================================================#
 """Instantiate a Scraper object with the given URL, pass, user."""
-S = Scraper.Scrape(Username, Password, URL)    
+S = Scraper.Scrape(Username, Password, Sprint, URL)    
 URL = S.ModifiedURL
 #============================================================================#
 """The driver gets the URL"""
@@ -75,126 +69,7 @@ S.Handler()
 S.TaskExtractor('Completed')
 #============================================================================#
 S.StringMaker()
-
-with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
-        TitleSprint,TitleDate),'w') as file:
-    
-    file.write('''\\documentclass[letterpaper, 12pt]{article}\n
-\\usepackage[utf8]{inputenc}\n
-\\usepackage[margin=1in,letterpaper]{geometry}\n
-\\usepackage[stretch=10]{microtype}\n
-\\usepackage[table,xcdraw]{xcolor}\n
-\\usepackage{listings}\n
-\\usepackage{color}\n
-\\usepackage{xcolor, soul}\n
-\\usepackage{enumitem}\n
-\\usepackage[en-GB,showseconds=false, showzone=false]{datetime2}\n
-\\definecolor{navy}{rgb}{245,156,74}\n
-\\definecolor{codegreen}{rgb}{0,0.6,0}\n
-\\definecolor{codegray}{rgb}{0.5,0.5,0.5}\n
-\\definecolor{codepurple}{rgb}{0.58,0,0.82}\n
-\\definecolor{backcolour}{rgb}{0.95,0.95,0.92}\n
-\\DeclareRobustCommand{\\hlcyan}[1]{{\\sethlcolor{cyan}\\hl{#1}}}\n
-\\DeclareRobustCommand{\\hlyellow}[1]{{\\sethlcolor{yellow}\\hl{#1}}}\n
-\\DeclareRobustCommand{\\hlgreen}[1]{{\\sethlcolor{green}\\hl{#1}}}\n
-\\DeclareRobustCommand{\\hlpurple}[1]{{\\sethlcolor{codepurple}\\hl{#1}}}\n''')
-    
-    file.write('''\\begin{{document}}\n
-\\begin{{center}}\n
-\\Large\n
-\\textsc{{GTPS Task Report for Sprint {}}}\\\n
-\\normalsize \\DTMnow\n
-\\end{{center}}\\vspace{{1.5cm}}\n'''.format(Sprint))
-
-
-
-    file.write('''\\large\n
-\\textsc{{Top Priority Tasks}}\n
-\\normalsize\n''')
-
-
-    if len(S.PriorityTasks) == 0:
-        file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
-    else:
-        file.write(
-            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
-        
-        for Task in S.PriorityTasks:
-            Task = Task['String']
-            Task = list(Task)
-            for i in range(0,len(Task)):
-                if Task[i] == '&':
-                    Task[i] = '\&'
-                if Task[i] == '$':
-                    Task[i] = '\$'
-                if Task[i] == '_':
-                    Task[i] = '\_'                
-                else:
-                    pass
-            Task = ''.join(Task)
-            file.write(Task + '\n')
-    
-    
-        file.write('\\end{enumerate}\\vspace{.5cm}\n')
-
-
-    file.write('''\\large\n
-\\textsc{{Tasks Created in the Last {}hrs}}\n
-\\normalsize\n'''.format(str(S.DaysSinceLastReport*24)))
-    if len(S.NewTasks) == 0:
-        file.write('\\textit{No new tasks to display.}\\vspace{.5cm}\n')
-    else:
-        file.write(
-            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
-        
-        for l in range(0,len(S.NewTasks)):
-            Task = list(S.NewTasks[l])
-            for i in range(0,len(Task)):
-                if Task[i] == '&':
-                    Task[i] = '\&'
-                if Task[i] == '$':
-                    Task[i] = '\$'
-                if Task[i] == '_':
-                    Task[i] = '\_'                
-                else:
-                    pass
-            Task = ''.join(Task)
-            
-            file.write(Task + '\n')
-    
-    
-        file.write('\\end{enumerate}\\vspace{.5cm}\n')
-
-    file.write('''\\large\n
-\\textsc{{Previous Tasks}}\n
-\\normalsize\n''')
-
-    if len(S.PreviousTasks) == 0:
-        file.write('\\textit{No previous tasks to display.}\\vspace{.5cm}\n')
-    else:
-        file.write(
-            '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
-        
-        for Task in S.PreviousTasks:
-            Task = list(Task)
-            for i in range(0,len(Task)):
-                if Task[i] == '&':
-                    Task[i] = '\&'
-                if Task[i] == '$':
-                    Task[i] = '\$'
-                if Task[i] == '_':
-                    Task[i] = '\_'                
-                else:
-                    pass
-            Task = ''.join(Task)
-            file.write(Task + '\n')
-    
-    
-        file.write('\\end{enumerate}\\vspace{.5cm}\n')
-                
-
-
-    file.write('\\end{document}')
+S.ReportGenerator()
 #============================================================================#
 
 
@@ -219,11 +94,11 @@ or in progress task that it would move that task to test.
 S.driver.close()
 
 subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(
-    TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
 subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(
-    TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
 time.sleep(5)
 print('Opening document')
 subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(
-    TitleSprint,TitleDate)],  cwd="../GeneratedReports")
+    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
