@@ -221,3 +221,5 @@ class Scrape:
                 self.Appender(Tasks, hl)
         
         self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
+        
+        

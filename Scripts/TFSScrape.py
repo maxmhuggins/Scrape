@@ -19,8 +19,8 @@ import Scraper
 startup. The latter is more secure."""
 
 Username = '***REMOVED***'
-Password = 'uCfE2ahPM8C89CZ'
-Sprint=20
+Password = '***REMOVED***'
+Sprint=1
 
 # Sprint = input('Please input the Sprint number\n >')
 # Username = input('Please input your username\n >')
@@ -111,6 +111,8 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
     file.write('''\\large\n
 \\textsc{{Top Priority Tasks}}\n
 \\normalsize\n''')
+
+
     if len(S.PriorityTasks) == 0:
         file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
     else:
@@ -123,10 +125,14 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
             for i in range(0,len(Task)):
                 if Task[i] == '&':
                     Task[i] = '\&'
+                if Task[i] == '$':
+                    Task[i] = '\$'
+                if Task[i] == '_':
+                    Task[i] = '\_'                
                 else:
                     pass
             Task = ''.join(Task)
-            file.write(Task)
+            file.write(Task + '\n')
     
     
         file.write('\\end{enumerate}\\vspace{.5cm}\n')
@@ -146,11 +152,15 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
             for i in range(0,len(Task)):
                 if Task[i] == '&':
                     Task[i] = '\&'
+                if Task[i] == '$':
+                    Task[i] = '\$'
+                if Task[i] == '_':
+                    Task[i] = '\_'                
                 else:
                     pass
             Task = ''.join(Task)
             
-            file.write(Task)
+            file.write(Task + '\n')
     
     
         file.write('\\end{enumerate}\\vspace{.5cm}\n')
@@ -170,10 +180,14 @@ with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
             for i in range(0,len(Task)):
                 if Task[i] == '&':
                     Task[i] = '\&'
+                if Task[i] == '$':
+                    Task[i] = '\$'
+                if Task[i] == '_':
+                    Task[i] = '\_'                
                 else:
                     pass
             Task = ''.join(Task)
-            file.write(Task)
+            file.write(Task + '\n')
     
     
         file.write('\\end{enumerate}\\vspace{.5cm}\n')
