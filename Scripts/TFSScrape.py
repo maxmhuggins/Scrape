@@ -89,6 +89,10 @@ Wrap up in pretty bow so others can use.
                 
 It would be really snazzy if it saw that a tester's name is assigned to a to-do
 or in progress task that it would move that task to test.
+
+If I get close to end of the document then clear page
+
+Associate task with the PBI in the report?
 """
 
 S.driver.close()
