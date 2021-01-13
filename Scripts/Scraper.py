@@ -172,8 +172,20 @@ class Scrape:
         try:
             
             for element in elements:
-                xpath = '//*[@id="vss_11"]/div[2]'
-                ScrollDown = self.driver.find_element_by_xpath(xpath)
+                CurrentTask = '//*[@id="vss_11"]/div[2]'
+                # Link = """//*[contains(text(), "GTPS: ")]"""
+                
+                # EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
+                # EnterCurrentTask.send_keys(Keys.RETURN)
+                
+                # LinkedItem = self.driver.find_element_by_xpath(Link)
+                
+                # print(LinkedItem)
+                # print('\n \n \n \n')
+                
+                # self.driver.navigate().back()
+                
+                ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
                                 
                 self.TaskNumber = self.driver.find_element_by_xpath(
@@ -190,6 +202,7 @@ class Scrape:
                 
                 Priority = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
+                
         
                 self.TaskPriority = Priority.text
                 self.Person = Names[self.TaskPerson.text]
