@@ -89,6 +89,8 @@ Wrap up in pretty bow so others can use.
                 
 It would be really snazzy if it saw that a tester's name is assigned to a to-do
 or in progress task that it would move that task to test.
+
+Need to fix proxy settings for webdriver
 """
 
 S.driver.close()

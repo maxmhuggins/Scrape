@@ -44,6 +44,7 @@ class Scrape:
         self.ModifiedURL = self.MakeURL(self.URL)
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
+        self.options.add_argument('--proxy-server=%s' % 'iproxy-zdal2.snapon.com')
         self.driver = webdriver.Chrome(options=self.options)
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
@@ -173,17 +174,19 @@ class Scrape:
             
             for element in elements:
                 CurrentTask = '//*[@id="vss_11"]/div[2]'
-                # Link = """//*[contains(text(), "GTPS: ")]"""
+                Link = """/html/body/div[3]/div/div[2]/div/div[2]/div/div[3]/
+                div[4]/div[2]/div/div[2]/div/div/div/div/div[3]/div[1]/div/
+                div[2]/div[2]/div[2]/div/div/div[2]/div/div/div[2]/div[2]/
+                div/div/div/div[2]/div/div/div[1]/div[4]/a"""
                 
-                # EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
-                # EnterCurrentTask.send_keys(Keys.RETURN)
+                EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
+                EnterCurrentTask.send_keys(Keys.RETURN)
+
+                LinkedItem = self.driver.find_element_by_xpath(Link)
                 
-                # LinkedItem = self.driver.find_element_by_xpath(Link)
-                
-                # print(LinkedItem)
-                # print('\n \n \n \n')
-                
-                # self.driver.navigate().back()
+                print(LinkedItem.text)
+                print('\n \n \n \n')
+                self.driver.back()
                 
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
