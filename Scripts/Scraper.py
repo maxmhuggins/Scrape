@@ -44,7 +44,7 @@ class Scrape:
         self.ModifiedURL = self.MakeURL(self.URL)
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--start-maximized')
-        self.options.add_argument('--proxy-server=%s' % 'iproxy-zdal2.snapon.com:8080')
+        # self.options.add_argument('--proxy-server=%s' % 'iproxy-zdal2.snapon.com:8080')
         self.driver = webdriver.Chrome(options=self.options)
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
