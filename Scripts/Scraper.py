@@ -23,7 +23,8 @@ Names = {
     "Bansal, Aman":"AMAN", "Khurana, Simran":"SIMRAN", 
     "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
-    "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE"
+    "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE",
+    "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU"
     }
 #============================================================================#
 """
@@ -72,7 +73,7 @@ class Scrape:
     """The Clicker method literally clicks on an xpath element. There is a 
     try, except in place for unloaded elements."""       
     def Clicker(self, xpath):
-        
+        time.sleep(1)
         result = None
         tried = 0
         while result is None:
@@ -173,7 +174,9 @@ class Scrape:
         try:
             
             for element in elements:
+                
                 CurrentTask = '//*[@id="vss_11"]/div[2]'
+                
                 Link = """/html/body/div[3]/div/div[2]/div/div[2]/div/div[3]/
                 div[4]/div[2]/div/div[2]/div/div/div/div/div[3]/div[1]/div/
                 div[2]/div[2]/div[2]/div/div/div[2]/div/div/div[2]/div[2]/
@@ -182,9 +185,9 @@ class Scrape:
                 EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
                 EnterCurrentTask.send_keys(Keys.RETURN)
 
-                LinkedItem = self.driver.find_element_by_xpath(Link)
+                self.LinkedItem = self.driver.find_element_by_xpath(Link).text()
                 
-                print(LinkedItem.text)
+                print(self.LinkedItem)
                 print('\n \n \n \n')
                 self.driver.back()
                 
@@ -215,7 +218,8 @@ class Scrape:
                 Task = {
                     'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                     'Number':self.TaskNumber.text,'Person':self.Person,
-                    'Description':self.TaskDescription.text
+                    'Description':self.TaskDescription.text, 
+                    'Link':self.LinkedItem
                         }
                 
                 self.Tasks.append(Task)
