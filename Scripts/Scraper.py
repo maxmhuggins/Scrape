@@ -185,12 +185,12 @@ class Scrape:
                 EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
                 EnterCurrentTask.send_keys(Keys.RETURN)
 
-                self.LinkedItem = self.driver.find_element_by_xpath(Link).text()
-                
+                self.LinkedItem = self.driver.find_element_by_xpath(Link).text
+                print('prior')
                 print(self.LinkedItem)
                 print('\n \n \n \n')
                 self.driver.back()
-                
+                print('here')
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
                                 
@@ -223,7 +223,7 @@ class Scrape:
                         }
                 
                 self.Tasks.append(Task)
-                
+                print(element)
         except NoSuchElementException:
             pass
     
