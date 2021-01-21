@@ -73,7 +73,6 @@ class Scrape:
     """The Clicker method literally clicks on an xpath element. There is a 
     try, except in place for unloaded elements."""       
     def Clicker(self, xpath):
-        time.sleep(1)
         result = None
         tried = 0
         while result is None:
@@ -174,23 +173,19 @@ class Scrape:
         try:
             
             for element in elements:
-                
+
                 CurrentTask = '//*[@id="vss_11"]/div[2]'
                 
-                Link = """/html/body/div[3]/div/div[2]/div/div[2]/div/div[3]/
-                div[4]/div[2]/div/div[2]/div/div/div/div/div[3]/div[1]/div/
-                div[2]/div[2]/div[2]/div/div/div[2]/div/div/div[2]/div[2]/
-                div/div/div/div[2]/div/div/div[1]/div[4]/a"""
+                Link = """//*[@id="vss_582"]/div[2]/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div[1]/div[4]/a"""
                 
                 EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
                 EnterCurrentTask.send_keys(Keys.RETURN)
-
-                self.LinkedItem = self.driver.find_element_by_xpath(Link).text
-                print('prior')
-                print(self.LinkedItem)
-                print('\n \n \n \n')
+                print('no error')
+                self.LinkedItem = self.driver.find_element_by_xpath(Link)
+                print('error')
+                print(self.LinkedItem.text)
+                time.sleep(100)
                 self.driver.back()
-                print('here')
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
                                 
@@ -219,11 +214,11 @@ class Scrape:
                     'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                     'Number':self.TaskNumber.text,'Person':self.Person,
                     'Description':self.TaskDescription.text, 
-                    'Link':self.LinkedItem
+                    'Link':self.LinkedItem.text
                         }
                 
                 self.Tasks.append(Task)
-                print(element)
+
         except NoSuchElementException:
             pass
     
