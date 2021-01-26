@@ -176,15 +176,17 @@ class Scrape:
 
                 CurrentTask = '//*[@id="vss_11"]/div[2]'
                 
-                Link = """//*[@id="vss_582"]/div[2]/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div[1]/div[4]/a"""
+                
                 
                 EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
                 EnterCurrentTask.send_keys(Keys.RETURN)
                 print('no error')
+                # Link = """//*[@id="vss_572"]/div[2]/div/div/div[2]/div[2]/div/div/div"""
+                Link = """//*[text()[contains(.,'Updated')]]"""
                 self.LinkedItem = self.driver.find_element_by_xpath(Link)
                 print('error')
-                print(self.LinkedItem.text)
-                time.sleep(100)
+                print(self.LinkedItem)
+                time.sleep(1)
                 self.driver.back()
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
@@ -214,7 +216,7 @@ class Scrape:
                     'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                     'Number':self.TaskNumber.text,'Person':self.Person,
                     'Description':self.TaskDescription.text, 
-                    'Link':self.LinkedItem.text
+                    # 'Link':self.LinkedItem.text
                         }
                 
                 self.Tasks.append(Task)
