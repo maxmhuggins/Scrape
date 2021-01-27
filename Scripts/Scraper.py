@@ -24,7 +24,7 @@ Names = {
     "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
     "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE",
-    "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU"
+    "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU", "":"Unassigned"
     }
 #============================================================================#
 """
@@ -90,7 +90,8 @@ class Scrape:
       
             
     """The Appender method will make a dictionary for each task that includes
-    priority and the string that will get put into the latex document."""
+    priority and the string that will get put into the latex document. Also, it
+    will include the aligner model for making different types of reports"""
     def Appender(self, Tasks, hl):
         
         T = Tasks['Priority']
@@ -104,7 +105,8 @@ class Scrape:
                     hl, Tasks['Number'], Tasks['Person'], 
                     Tasks['Description']),
                     
-                    'Priority':Tasks['Priority']
+                    'Priority':Tasks['Priority'], 
+                    'Aligner Model':Tasks['Aligner Model']
                     }
                                           )
             
@@ -115,7 +117,8 @@ class Scrape:
                     hl, Tasks['Number'], Tasks['Person'], 
                     Tasks['Description']),
                     
-                    'Priority':None
+                    'Priority':None,
+                    'Aligner Model':Tasks['Aligner Model']
                     }
                                           )
         else:
@@ -125,7 +128,8 @@ class Scrape:
                     hl, Tasks['Number'], Tasks['Person'], 
                     Tasks['Description']),
                     
-                    'Priority':None
+                    'Priority':None,
+                    'Aligner Model':Tasks['Aligner Model']
                     }
                                           )
     
@@ -156,6 +160,15 @@ class Scrape:
         self.Clicker(ArrowButton)
         
         
+        AlignerModel = '//*[contains(text(), "Aligner Model")]'
+        self.Clicker(AlignerModel)
+        
+        
+        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
+        div[3]/div[1]/button/span/span"""
+        self.Clicker(ArrowButton)
+        
+
         OK = '//button[@id="ok"]'
         self.Clicker(OK)
         
@@ -178,16 +191,16 @@ class Scrape:
                 
                 
                 
-                EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
-                EnterCurrentTask.send_keys(Keys.RETURN)
-                print('no error')
-                # Link = """//*[@id="vss_572"]/div[2]/div/div/div[2]/div[2]/div/div/div"""
-                Link = """//*[text()[contains(.,'Updated')]]"""
-                self.LinkedItem = self.driver.find_element_by_xpath(Link)
-                print('error')
-                print(self.LinkedItem)
-                time.sleep(1)
-                self.driver.back()
+                # EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
+                # EnterCurrentTask.send_keys(Keys.RETURN)
+                # print('no error')
+                # # Link = """//*[@id="vss_572"]/div[2]/div/div/div[2]/div[2]/div/div/div"""
+                # Link = """//*[text()[contains(.,'Updated')]]"""
+                # self.LinkedItem = self.driver.find_element_by_xpath(Link)
+                # print('error')
+                # print(self.LinkedItem)
+                # time.sleep(1)
+                # self.driver.back()
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
                                 
@@ -205,18 +218,24 @@ class Scrape:
                 
                 Priority = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
+
+                AlignerModel = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[9]'.format(element))
                 
-        
+                print(AlignerModel.text)
+                
                 self.TaskPriority = Priority.text
                 self.Person = Names[self.TaskPerson.text]
                 self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
                 self.TaskTimeSec = time.mktime(self.TaskTime)
+                self.AlignerModel = AlignerModel.text
                 
                 Task = {
                     'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                     'Number':self.TaskNumber.text,'Person':self.Person,
                     'Description':self.TaskDescription.text, 
                     # 'Link':self.LinkedItem.text
+                    'Aligner Model':self.AlignerModel
                         }
                 
                 self.Tasks.append(Task)
@@ -278,7 +297,10 @@ class Scrape:
                 '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
             
             for Task in CurrentCategory:
-                file.write(self.StringFixer(Task) + '\n')
+                if Task['Aligner Model'] == 'Truck':
+                    pass
+                else:
+                    file.write(self.StringFixer(Task) + '\n')
         
         
             file.write('\\end{enumerate}\\vspace{.5cm}\n')
