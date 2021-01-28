@@ -193,13 +193,13 @@ class Scrape:
                 
                 # EnterCurrentTask = self.driver.find_element_by_xpath(CurrentTask)
                 # EnterCurrentTask.send_keys(Keys.RETURN)
-                # print('no error')
-                # # Link = """//*[@id="vss_572"]/div[2]/div/div/div[2]/div[2]/div/div/div"""
-                # Link = """//*[text()[contains(.,'Updated')]]"""
-                # self.LinkedItem = self.driver.find_element_by_xpath(Link)
-                # print('error')
-                # print(self.LinkedItem)
-                # time.sleep(1)
+                # # print('no error')
+                # RelatedItems = """//*[@id="vss_652"]"""
+                # # Link = """//*[text()[contains(.,'Updated')]]"""
+                # self.LinkedItem = self.driver.find_element_by_xpath(RelatedItems)
+                # # print('error')
+                # print(self.LinkedItem.text)
+                # # time.sleep(1)
                 # self.driver.back()
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
