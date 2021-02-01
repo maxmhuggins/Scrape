@@ -264,7 +264,10 @@ class Scrape:
                 '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
             
             for Task in CurrentCategory:
-                file.write(self.StringFixer(Task) + '\n')
+                if 'EZ-ADAS' not in self.StringFixer(Task):
+                    file.write(self.StringFixer(Task) + '\n')
+                else:
+                    pass
         
         
             file.write('\\end{enumerate}\\vspace{.5cm}\n')
