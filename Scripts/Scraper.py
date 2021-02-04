@@ -178,35 +178,40 @@ class Scrape:
                 xpath = '//*[@id="vss_11"]/div[2]'
                 ScrollDown = self.driver.find_element_by_xpath(xpath)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
-                                
-                self.TaskNumber = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-        
+                
                 self.TaskDescription = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
-                
-                self.TaskPerson = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-                        
-                TaskTime = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-                
-                Priority = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
-        
-                self.TaskPriority = Priority.text
-                self.Person = Names[self.TaskPerson.text]
-                self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-                self.TaskTimeSec = time.mktime(self.TaskTime)
-                
-                Task = {
-                    'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
-                    'Number':self.TaskNumber.text,'Person':self.Person,
-                    'Description':self.TaskDescription.text
-                        }
-                
-                self.Tasks.append(Task)
-                
+
+                if 'EZ-ADAS' not in self.TaskDescription.text:
+                    
+                    self.TaskNumber = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+                            
+                    self.TaskPerson = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
+                            
+                    TaskTime = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
+                    
+                    Priority = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
+            
+                    self.TaskPriority = Priority.text
+                    self.Person = Names[self.TaskPerson.text]
+                    self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
+                    self.TaskTimeSec = time.mktime(self.TaskTime)
+                    
+                    
+                    Task = {
+                        'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
+                        'Number':self.TaskNumber.text,'Person':self.Person,
+                        'Description':self.TaskDescription.text
+                            }
+                    
+                    self.Tasks.append(Task)
+                    
+                else:
+                    pass
         except NoSuchElementException:
             pass
     
@@ -264,10 +269,7 @@ class Scrape:
                 '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
             
             for Task in CurrentCategory:
-                if 'EZ-ADAS' not in self.StringFixer(Task):
-                    file.write(self.StringFixer(Task) + '\n')
-                else:
-                    pass
+                file.write(self.StringFixer(Task) + '\n')
         
         
             file.write('\\end{enumerate}\\vspace{.5cm}\n')
