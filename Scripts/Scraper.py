@@ -35,12 +35,13 @@ attributes for the report and handles task dictionaries.
 """
 class Scrape:
     
-    def __init__(self, Username, Password, Sprint, URL):
+    def __init__(self, Username, Password, Sprint, URL, SoftwareVersion):
         """Either input name here, or uncomment the input commands and do it on 
         startup. The latter is more secure."""
         self.Username = Username
         self.Password = Password
         self.Sprint = Sprint    
+        self.SoftwareVersion = SoftwareVersion
         self.TitleSprint = str(self.Sprint)
         self.TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
         self.URL = URL
@@ -153,9 +154,18 @@ class Scrape:
         self.Clicker(BacklogPriority)
         
         
-        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
-        div[3]/div[1]/button/span/span"""
         self.Clicker(ArrowButton)
+        
+        '''Some stupid stuff had to happen to find the option 'Tags' for 
+        some reason... that's what this mess is.'''
+        ListOfOptions = self.driver.find_element_by_xpath('//*[@id="display-available-list"]')
+        for option in ListOfOptions.find_elements_by_tag_name('option'):
+            if option.text == 'Tags':
+                option.click()
+                break        
+                
+        self.Clicker(ArrowButton)
+        
         
         
         OK = '//button[@id="ok"]'
@@ -181,8 +191,11 @@ class Scrape:
                 
                 self.TaskDescription = self.driver.find_element_by_xpath(
                     '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
+            
+                Tag = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[9]'.format(element))
 
-                if 'EZ-ADAS' not in self.TaskDescription.text:
+                if 'EZ-ADAS' not in self.TaskDescription.text and Tag.text == self.SoftwareVersion:
                     
                     self.TaskNumber = self.driver.find_element_by_xpath(
                         '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
@@ -200,12 +213,13 @@ class Scrape:
                     self.Person = Names[self.TaskPerson.text]
                     self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
                     self.TaskTimeSec = time.mktime(self.TaskTime)
+                    self.Tag = Tag.text
                     
                     
                     Task = {
                         'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
                         'Number':self.TaskNumber.text,'Person':self.Person,
-                        'Description':self.TaskDescription.text
+                        'Description':self.TaskDescription.text, 'Tag':self.Tag
                             }
                     
                     self.Tasks.append(Task)
@@ -244,7 +258,8 @@ class Scrape:
         
         self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
         
-    
+    '''The StringFixer method can be used to correct strings with special
+    characters in them, characters like & or \ '''
     def StringFixer(self, Task):
         Task = Task['String']
         Task = list(Task)
@@ -260,10 +275,11 @@ class Scrape:
         Task = ''.join(Task)
         return Task
     
-    
+    '''The SectionMaker method is used to make the sections of the report.
+    It also handles if there are no tasks in a given categeory.'''
     def SectionMaker(self, file, CurrentCategory):
         if len(CurrentCategory) == 0:
-            file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+            file.write('\\textit{No tasks to display.}\\vspace{.5cm}\n')
         else:
             file.write(
                 '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
@@ -274,6 +290,9 @@ class Scrape:
         
             file.write('\\end{enumerate}\\vspace{.5cm}\n')
     
+    
+    '''The ReportGenerator method will make a LaTeX document from the
+    information gathered throughout the program.'''
     def ReportGenerator(self):
         with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
                 self.TitleSprint, self.TitleDate),'w') as file:
@@ -301,9 +320,9 @@ class Scrape:
             file.write('''\\begin{{document}}\n
         \\begin{{center}}\n
         \\Large\n
-        \\textsc{{GTPS Task Report for Sprint {}}}\\\n
+        \\textsc{{GTPS Task Report for Sprint {} v{}}}\\\n
         \\normalsize \\DTMnow\n
-        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(self.Sprint))
+        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(self.Sprint, self.SoftwareVersion))
         
         
         
