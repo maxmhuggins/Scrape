@@ -17,7 +17,7 @@ import Scraper
 #============================================================================#
 Username = '***REMOVED***'
 Password = '***REMOVED***'
-Sprint = 2  
+Sprint = 3  
 # Sprint = input('Please input the Sprint number\n >')       
 # Username = input('Please input your username\n >')
 # Password = input('Please input your password\n >')
