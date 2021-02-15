@@ -19,11 +19,13 @@ Username = '***REMOVED***'
 Password = '***REMOVED***'
 Sprint = 3  
 SoftwareVersion = '1.1.0'
+ReportType = 'EZ-ADAS'
 
 # Sprint = input('Please input the Sprint number\n >')       
 # Username = input('Please input your username\n >')
 # Password = input('Please input your password\n >')
 # SoftwareVersion = input('Please input the software version being released next\n >')
+# ReportType = input('Please input the report type (f.e. True-Point)\n >')
 #============================================================================#
 """This URL leads to TFS, on its own it is useless for scraping, but it is
 passed to the Scraper class which uses a method to format it so selenium can
@@ -34,7 +36,7 @@ Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/
 requirements'''
 #============================================================================#
 """Instantiate a Scraper object with the given URL, pass, user."""
-S = Scraper.Scrape(Username, Password, Sprint, URL, SoftwareVersion)    
+S = Scraper.Scrape(Username, Password, Sprint, URL, SoftwareVersion, ReportType)    
 URL = S.ModifiedURL
 #============================================================================#
 """The driver gets the URL"""
@@ -101,12 +103,13 @@ Associate task with the PBI in the report?
 
 S.driver.close()
 
-subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Compiling document using Rubber')
+subprocess.Popen(['rubber', '-d', S.DocumentTitle],  cwd="../GeneratedReports/")
 time.sleep(5)
-subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Cleaning directory using Rubber')
+subprocess.Popen(['rubber', '--clean', S.DocumentTitle],  cwd="../GeneratedReports/")
 time.sleep(5)
-print('Opening document')
-subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Opening document with Okular')
+subprocess.Popen(['okular', 'Sprint {} {} Task Report {}.pdf'.format(
+                S.TitleSprint, Scraper.AlignerModels[S.ReportType],
+                S.TitleDate)],  cwd="../GeneratedReports/")
