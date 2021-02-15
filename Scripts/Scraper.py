@@ -75,7 +75,7 @@ class Scrape:
     """The Clicker method literally clicks on an xpath element. There is a 
     try, except in place for unloaded elements."""       
     def Clicker(self, xpath):
-        
+        time.sleep(1)
         result = None
         tried = 0
         while result is None:
