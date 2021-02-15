@@ -24,8 +24,17 @@ Names = {
     "Pandey, Sampurnanand":"SAM", "Singh, Upasana":"UPASANA", 
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A":"JONATHAN",
     "LeCrone, Sean": "SEAN", "Robinson, Chance W":"CHANCE",
-    "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU", "":"Unassigned"
+    "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU", 
+    "Heaver, Annika":"ANNIKA",
+    "":"Unassigned"
     }
+
+AlignerModels = {'All':'Specs Testing', 'Tru-Point':'GTPS', 'EZ-ADAS':'EZ-ADAS', 
+                 'V1200':'V-Series', 'V2000':'V-Series', 'V2100':'V-Series', 
+                 'V2280':'V-Series', 'V2380':'V-Series', 'V3300':'V-Series', 
+                 'Pro32':'Pro-Series', 'Pro42':'Pro-Series', 'Dragon':'Dragon',
+                 'OEM':'OEM', 'Truck':'Truck'
+                 }
 #============================================================================#
 """
 The Scrape class handles most of the scraping from TFS. It also includes some
@@ -33,14 +42,19 @@ attributes for the report and handles task dictionaries.
 """
 class Scrape:
     
-    def __init__(self, Username, Password, Sprint, URL):
+    def __init__(self, Username, Password, Sprint, URL, SoftwareVersion, ReportType):
         """Either input name here, or uncomment the input commands and do it on 
         startup. The latter is more secure."""
         self.Username = Username
         self.Password = Password
         self.Sprint = Sprint    
+        self.SoftwareVersion = SoftwareVersion
         self.TitleSprint = str(self.Sprint)
         self.TitleDate = time.strftime('%m-%d-%y Hr-%H',time.localtime())
+        self.ReportType = ReportType
+        self.DocumentTitle = 'Sprint {} {} Task Report {}.tex'.format(
+                self.TitleSprint, AlignerModels[self.ReportType],
+                self.TitleDate)
         self.URL = URL
         self.ModifiedURL = self.MakeURL(self.URL)
         self.options = webdriver.ChromeOptions()
@@ -50,6 +64,8 @@ class Scrape:
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.mktime(time.gmtime())
+        self.Delay = 1
+        self.Columns = ['Created Date', 'Backlog Priority', 'Tags', 'Aligner Model']
         self.Tasks = []
         self.NewTasks = []
         self.PreviousTasks = []
@@ -73,6 +89,7 @@ class Scrape:
     """The Clicker method literally clicks on an xpath element. There is a 
     try, except in place for unloaded elements."""       
     def Clicker(self, xpath):
+        time.sleep(self.Delay)
         result = None
         tried = 0
         while result is None:
@@ -132,46 +149,37 @@ class Scrape:
                     'Aligner Model':Tasks['Aligner Model']
                     }
                                           )
-    
+            
     
     """The Handler method makes a unique query that includes the date the task
     was created as well as the backlog priority."""
     def Handler(self):
         
+        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
+        div[3]/div[1]/button/span/span"""       
+        
         ColumnOptions = '//*[@id="mi_71_column-options"]'
         self.Clicker(ColumnOptions)
         
+        time.sleep(self.Delay)
         
-        CreatedDate = '//*[contains(text(), "Created Date")]'
-        self.Clicker(CreatedDate)
+        counter = 0
+        ListOfOptions = self.driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[2]/select')
+        for option in ListOfOptions.find_elements_by_tag_name('option'):
+                            
+            if option.text in self.Columns:
+                option.click()
+                time.sleep(self.Delay)
+                self.Clicker(ArrowButton)
+                time.sleep(self.Delay)
+                counter += 1
+                    
+                if counter == len(self.Columns):
+                    break
         
-        
-        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
-        div[3]/div[1]/button/span/span"""
-        self.Clicker(ArrowButton)
-        
-        
-        BacklogPriority = '//*[contains(text(), "Backlog Priority")]'
-        self.Clicker(BacklogPriority)
-        
-        
-        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
-        div[3]/div[1]/button/span/span"""
-        self.Clicker(ArrowButton)
-        
-        
-        AlignerModel = '//*[contains(text(), "Aligner Model")]'
-        self.Clicker(AlignerModel)
-        
-        
-        ArrowButton = """/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/
-        div[3]/div[1]/button/span/span"""
-        self.Clicker(ArrowButton)
-        
-
         OK = '//button[@id="ok"]'
         self.Clicker(OK)
-        
+                
         CreatedDateColumn = '//*[@id="vss_11"]/div[1]/div[1]/div[7]/div[2]'
         self.Clicker(CreatedDateColumn)
         self.Clicker(CreatedDateColumn)
@@ -203,47 +211,61 @@ class Scrape:
                 # self.driver.back()
                 ScrollDown = self.driver.find_element_by_xpath(CurrentTask)
                 ScrollDown.send_keys(Keys.ARROW_DOWN)
-                                
-                self.TaskNumber = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
-        
-                self.TaskDescription = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
                 
-                self.TaskPerson = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[4]'.format(element))
-                        
-                TaskTime = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
-                
-                Priority = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
-
                 AlignerModel = self.driver.find_element_by_xpath(
-                    '//*[@id="row_vss_11_{}"]/div[9]'.format(element))
-                
-                print(AlignerModel.text)
-                
-                self.TaskPriority = Priority.text
-                self.Person = Names[self.TaskPerson.text]
-                self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
-                self.TaskTimeSec = time.mktime(self.TaskTime)
+                    '//*[@id="row_vss_11_{}"]/div[7]'.format(element))
+
+                Tag = self.driver.find_element_by_xpath(
+                    '//*[@id="row_vss_11_{}"]/div[10]'.format(element))
+
                 self.AlignerModel = AlignerModel.text
+                self.Tag = Tag.text
                 
-                Task = {
-                    'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
-                    'Number':self.TaskNumber.text,'Person':self.Person,
-                    'Description':self.TaskDescription.text, 
+                if self.AlignerModel == self.ReportType and (
+                        self.Tag == self.SoftwareVersion or self.Tag == ' '):
+            
+                    TaskNumber = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[1]'.format(element))
+
+                    TaskDescription = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[3]'.format(element))
+                
+                    TaskPerson = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[4]'.format(element))                
+                
+                    TaskTime = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[9]'.format(element))
+                
+                    Priority = self.driver.find_element_by_xpath(
+                        '//*[@id="row_vss_11_{}"]/div[8]'.format(element))
+                
+                    
+                    
+                    self.TaskPriority = Priority.text
+                    self.Person = Names[TaskPerson.text]
+                    self.TaskTime = time.strptime(TaskTime.text, "%m/%d/%Y %I:%M %p")
+                    self.TaskTimeSec = time.mktime(self.TaskTime)
+                    self.TaskDescription = TaskDescription
+                    self.TaskNumber = TaskNumber
+                    
+                    Task = {
+                        'Time':self.TaskTimeSec,'Type':Section,'Priority':self.TaskPriority,
+                        'Number':self.TaskNumber.text,'Person':self.Person,
+                        'Description':self.TaskDescription.text, 
                     # 'Link':self.LinkedItem.text
-                    'Aligner Model':self.AlignerModel
-                        }
-                
-                self.Tasks.append(Task)
+                        'Aligner Model':self.AlignerModel, 'Tag':self.Tag
+                            }
+                        
+                    self.Tasks.append(Task)
+                    
+                else:
+                    pass
 
         except NoSuchElementException:
             pass
     
-    
+
+
     """The StringMaker method will sort the list of dictionaries by date,
     assign colors to the highlighter, then send the task to the Appender"""
     def StringMaker(self):
@@ -272,7 +294,9 @@ class Scrape:
         
         self.PriorityTasks.sort(key=operator.itemgetter('Priority'), reverse=False)
         
-    
+        
+    '''The StringFixer method can be used to correct strings with special
+    characters in them, characters like & or \ '''
     def StringFixer(self, Task):
         Task = Task['String']
         Task = list(Task)
@@ -289,6 +313,8 @@ class Scrape:
         return Task
     
     
+    '''The SectionMaker method is used to make the sections of the report.
+    It also handles if there are no tasks in a given categeory.'''
     def SectionMaker(self, file, CurrentCategory):
         if len(CurrentCategory) == 0:
             file.write('\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
@@ -305,9 +331,11 @@ class Scrape:
         
             file.write('\\end{enumerate}\\vspace{.5cm}\n')
     
+    
+    '''The ReportGenerator method will make a LaTeX document from the
+    information gathered throughout the program.'''
     def ReportGenerator(self):
-        with open('../GeneratedReports/Sprint {} GTPS Task Report {}.tex'.format(
-                self.TitleSprint, self.TitleDate),'w') as file:
+        with open('../GeneratedReports/'+self.DocumentTitle,'w') as file:
             
             file.write('''\\documentclass[letterpaper, 12pt]{article}\n
         \\usepackage[utf8]{inputenc}\n
@@ -332,9 +360,9 @@ class Scrape:
             file.write('''\\begin{{document}}\n
         \\begin{{center}}\n
         \\Large\n
-        \\textsc{{GTPS Task Report for Sprint {}}}\\\n
+        \\textsc{{{} Task Report for Sprint {} v{}}}\\\n
         \\normalsize \\DTMnow\n
-        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(self.Sprint))
+        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(AlignerModels[self.ReportType], self.Sprint, self.SoftwareVersion))
         
         
         

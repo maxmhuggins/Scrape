@@ -7,8 +7,8 @@ Created on Wed Nov  4 19:06:22 2020
 
 This is an automated task report generator. It uses selenium to access TFS
 and collect data from there. It compiles it into a LaTeX document for which
-rubber is used to compile it into a pdf to be sent out. This is for the SQA 
-intern team.
+rubber is used to compile it into a pdf to be sent out. Made for the SQA
+intern team to make their lives easier.
 """
 #============================================================================#
 import time
@@ -17,10 +17,15 @@ import Scraper
 #============================================================================#
 Username = '***REMOVED***'
 Password = '***REMOVED***'
-Sprint = 2  
+Sprint = 3  
+SoftwareVersion = '1.1.0'
+ReportType = 'Tru-Point'
+
 # Sprint = input('Please input the Sprint number\n >')       
 # Username = input('Please input your username\n >')
 # Password = input('Please input your password\n >')
+# SoftwareVersion = input('Please input the software version being released next\n >')
+# ReportType = input('Please input the report type (f.e. True-Point)\n >')
 #============================================================================#
 """This URL leads to TFS, on its own it is useless for scraping, but it is
 passed to the Scraper class which uses a method to format it so selenium can
@@ -31,7 +36,7 @@ Engineering%20Collection/Agile%20Sanctuary/_backlogs/TaskBoard/2020/
 requirements'''
 #============================================================================#
 """Instantiate a Scraper object with the given URL, pass, user."""
-S = Scraper.Scrape(Username, Password, Sprint, URL)    
+S = Scraper.Scrape(Username, Password, Sprint, URL, SoftwareVersion, ReportType)    
 URL = S.ModifiedURL
 #============================================================================#
 """The driver gets the URL"""
@@ -74,14 +79,15 @@ S.ReportGenerator()
 
 
 """
-Need to comment it out.
+Need to define the scope of certain sections of the code, seperate them into
+classes so it is easier to read and use.
+
+Need more comments.
 
 In the end, I will need some method of storing old tasks so that the task 
 report has older tasks on it. Possibly just use a .txt file to store the
 old strings and just append them at the end of the tex file.   - Or maybe, I 
-dont...? I mean no one is looking at the old tasks so who gives.  
-
-If top priority task is in done category then it shouldn't be a priority task
+dont...? I mean no one is looking at the old tasks so who gives. 
 
 Wrap up in pretty bow so others can use.
     To do this: creaete setup.py file
@@ -89,18 +95,20 @@ Wrap up in pretty bow so others can use.
                 
 It would be really snazzy if it saw that a tester's name is assigned to a to-do
 or in progress task that it would move that task to test.
+If I get close to end of the document then clear page
 
-Need to fix proxy settings for webdriver
+Associate task with the PBI in the report?
 """
 
 S.driver.close()
 
-subprocess.Popen(['rubber', '-d', 'Sprint {} GTPS Task Report {}.tex'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Compiling document using Rubber')
+subprocess.Popen(['rubber', '-d', S.DocumentTitle],  cwd="../GeneratedReports/")
 time.sleep(5)
-subprocess.Popen(['rubber', '--clean', 'Sprint {} GTPS Task Report {}.tex'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Cleaning directory using Rubber')
+subprocess.Popen(['rubber', '--clean', S.DocumentTitle],  cwd="../GeneratedReports/")
 time.sleep(5)
-print('Opening document')
-subprocess.Popen(['okular', 'Sprint {} GTPS Task Report {}.pdf'.format(
-    S.TitleSprint,S.TitleDate)],  cwd="../GeneratedReports")
+print('Opening document with Okular')
+subprocess.Popen(['okular', 'Sprint {} {} Task Report {}.pdf'.format(
+                S.TitleSprint, Scraper.AlignerModels[S.ReportType],
+                S.TitleDate)],  cwd="../GeneratedReports/")
