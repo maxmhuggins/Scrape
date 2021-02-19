@@ -63,7 +63,7 @@ class Scrape:
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.mktime(time.gmtime())
-        self.Delay = 1
+        self.Delay = 0
         self.Columns = ['Created Date', 'Backlog Priority', 'Tags', 'Aligner Model']
         self.Tasks = []
         self.NewTasks = []
@@ -159,7 +159,7 @@ class Scrape:
         ColumnOptions = '//*[@id="mi_71_column-options"]'
         self.Clicker(ColumnOptions)
         
-        time.sleep(self.Delay)
+        time.sleep(self.Delay+.5)
         
         counter = 0
         ListOfOptions = self.driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[4]/div[1]/div[1]/div[2]/select')

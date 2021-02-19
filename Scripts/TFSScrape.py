@@ -19,7 +19,7 @@ Username = '***REMOVED***'
 Password = '***REMOVED***'
 Sprint = 3  
 SoftwareVersion = '1.1.0'
-ReportType = 'EZ-ADAS'
+ReportType = 'Tru-Point'
 
 # Sprint = input('Please input the Sprint number\n >')       
 # Username = input('Please input your username\n >')
