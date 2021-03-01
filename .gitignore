@@ -4,3 +4,4 @@
 *.tex
 *.pyc
 config.*
+passwords.*
