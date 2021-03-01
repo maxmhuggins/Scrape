@@ -63,7 +63,7 @@ class Scrape:
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.mktime(time.gmtime())
-        self.Delay = 0
+        self.Delay = .5
         self.Columns = ['Created Date', 'Backlog Priority', 'Tags', 'Aligner Model']
         self.Tasks = []
         self.NewTasks = []

@@ -17,8 +17,8 @@ import Scraper
 #============================================================================#
 Username = '***REMOVED***'
 Password = '***REMOVED***'
-Sprint = 3  
-SoftwareVersion = '1.1.0'
+Sprint = 4
+SoftwareVersion = '1.2.0'
 ReportType = 'Tru-Point'
 
 # Sprint = input('Please input the Sprint number\n >')       
