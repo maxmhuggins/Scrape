@@ -9,9 +9,9 @@ Created on Sun Nov 15 20:18:19 2020
 from selenium import webdriver
 import TFSScrape as TFS
 
-Username = '***REMOVED***'
-Password = '***REMOVED***'
-URL = 'https://github.com/***REMOVED***/Scrape/blob/master/Latex/Sections/'
+Username = 'maxmhuggins'
+Password = 'Huggies192*!'
+URL = 'https://github.com/maxmhuggins/Scrape/blob/master/Latex/Sections/'
 
 S = TFS.Scraper(Username, Password, URL)    
 URL = S.ModifiedURL

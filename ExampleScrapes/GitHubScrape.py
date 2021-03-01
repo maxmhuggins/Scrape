@@ -3,7 +3,7 @@
 """
 Created on Wed Nov  4 18:10:31 2020
 
-@author: ***REMOVED***
+@author: maxmhuggins
 
 This is an example of scraping a webpage that requries a login. I've taken the
 cookies and headers from web developer tools in my browser and copied the cURL
@@ -23,7 +23,7 @@ cookies = {
     'has_recent_activity': '1',
     'user_session': 'CN26SHWJIvUynDqIDWGJBjAEE4Cx5q9Y5lRQint-iZki2TFV',
     '__Host-user_session_same_site': 'CN26SHWJIvUynDqIDWGJBjAEE4Cx5q9Y5lRQint-iZki2TFV',
-    'dotcom_user': '***REMOVED***',
+    'dotcom_user': 'maxmhuggins',
     '_gat': '1',
 }
 
@@ -36,7 +36,7 @@ headers = {
     'Upgrade-Insecure-Requests': '1',
 }
 
-response = requests.get('https://github.com/***REMOVED***/Scrape', headers=headers, cookies=cookies)
+response = requests.get('https://github.com/maxmhuggins/Scrape', headers=headers, cookies=cookies)
 
 
 soup = BeautifulSoup(response.content, 'html.parser')
@@ -52,8 +52,8 @@ import requests
 session = requests.Session()
 
 # Create the payload
-payload = {'login':'***REMOVED***', 
-          'password':'***REMOVED***'
+payload = {'login':'maxmhuggins', 
+          'password':'Huggies192*!'
          }
 
 # Post the payload to the site to log in
@@ -61,7 +61,7 @@ s = session.post("https://github.com/login", data=payload)
 print('login', s.status_code)
 
 # Navigate to the next page and scrape the data
-s = session.get('https://github.com/***REMOVED***/Scrape')
+s = session.get('https://github.com/maxmhuggins/Scrape')
 
 soup = BeautifulSoup(s.content, 'html.parser')
 

@@ -3,7 +3,7 @@
 """
 Created on Wed Nov  4 19:06:22 2020
 
-@author: ***REMOVED***
+@author: maxmhuggins
 
 This is an automated task report generator. It uses selenium to access TFS
 and collect data from there. It compiles it into a LaTeX document for which
@@ -13,12 +13,13 @@ intern team to make their lives easier.
 #============================================================================#
 import time
 import subprocess
-import Scraper       
+import Scraper
+import config       
 #============================================================================#
-Username = '***REMOVED***'
-Password = '***REMOVED***'
-Sprint = 3  
-SoftwareVersion = '1.1.0'
+Username = config.username
+Password = config.password
+Sprint = 4
+SoftwareVersion = '1.2.0'
 ReportType = 'Tru-Point'
 
 # Sprint = input('Please input the Sprint number\n >')       

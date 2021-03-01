@@ -3,7 +3,7 @@
 """
 Created on Tue Nov 10 08:19:05 2020
 
-@author: ***REMOVED***
+@author: maxmhuggins
 
 This is a script to get started using LaTeX with python to eventually create
 the task report from scraped data.
