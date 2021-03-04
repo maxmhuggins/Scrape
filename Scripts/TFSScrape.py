@@ -3,7 +3,7 @@
 """
 Created on Wed Nov  4 19:06:22 2020
 
-@author: ***REMOVED***
+@author: maxmhuggins
 
 This is an automated task report generator. It uses selenium to access TFS
 and collect data from there. It compiles it into a LaTeX document for which

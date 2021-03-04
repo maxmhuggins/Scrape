@@ -3,7 +3,7 @@
 """
 Created on Wed Nov 18 10:42:39 2020
 
-@author: ***REMOVED***
+@author: maxmhuggins
 """
 #============================================================================#
 from selenium import webdriver
@@ -265,7 +265,8 @@ class Scrape:
             Tasks = self.Tasks[i]
             if self.Tasks[i]['Type'] == 'Test':
                 hl = 'cyan'
-                self.Appender(Tasks, hl)
+                self.Appender(Tasks, hl)AM
+Certainly, it should be out in production.   
 
         
         for i in range(0, len(self.Tasks)):
