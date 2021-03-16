@@ -18,7 +18,7 @@ import config
 #============================================================================#
 Username = config.username
 Password = config.password
-Sprint = 4
+Sprint = 5
 SoftwareVersion = '1.2.0'
 ReportType = 'Tru-Point'
 
