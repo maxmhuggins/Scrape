@@ -253,12 +253,8 @@ class Scrape:
                     self.Tasks.append(Task)
 
                 else:
-                    # print('This failed:')
-                    # print(self.TaskNumber.text)
-                    # print(self.Tag)
-                    # print(self.AlignerModel)
-                    # print('===================')
                     pass
+
         except NoSuchElementException:
             pass
 
