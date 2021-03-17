@@ -69,7 +69,7 @@ class Scrape:
         self.driver = webdriver.Chrome(options=self.options)
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
-        self.TodaySec = time.mktime(time.gmtime()) - 60 * 60 * 24
+        self.TodaySec = time.time()
         self.Delay = 0
         self.Columns = ['Created Date', 'Backlog Priority', 'Tags',
                         'Aligner Model']
