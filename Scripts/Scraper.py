@@ -120,17 +120,46 @@ class Scrape:
 
         T = Tasks['Priority']
         if T != ' ':
-            self.PriorityTasks.append(
-                {
-                    'String': '\\item \\hl{}{{{}}} {}: {}'.format(
-                        hl,
-                        Tasks['Number'],
-                        Tasks['Person'],
-                        Tasks['Description']),
-                    'Priority': Tasks['Priority'],
-                    'Aligner Model': Tasks['Aligner Model']
-                    }
-                )
+
+            if Tasks['Type'] == 'Completed':
+                if Tasks['Time'] + self.SecondsSinceLastReport > self.TodaySec:
+                    self.NewTasks.append(
+                            {
+                                'String': '\\item \\hl{}{{{}}} {}: {}'.format(
+                                    hl,
+                                    Tasks['Number'],
+                                    Tasks['Person'],
+                                    Tasks['Description']),
+                                'Priority': Tasks['Priority'],
+                                'Aligner Model': Tasks['Aligner Model']
+                                }
+                            )
+
+                else:
+                    self.PreviousTasks.append(
+                            {
+                                'String': '\\item \\hl{}{{{}}} {}: {}'.format(
+                                    hl,
+                                    Tasks['Number'],
+                                    Tasks['Person'],
+                                    Tasks['Description']),
+                                'Priority': None,
+                                'Aligner Model': Tasks['Aligner Model']
+                                }
+                            )
+
+            else:
+                self.PriorityTasks.append(
+                    {
+                        'String': '\\item \\hl{}{{{}}} {}: {}'.format(
+                            hl,
+                            Tasks['Number'],
+                            Tasks['Person'],
+                            Tasks['Description']),
+                        'Priority': Tasks['Priority'],
+                        'Aligner Model': Tasks['Aligner Model']
+                        }
+                    )
 
         elif Tasks['Time'] + self.SecondsSinceLastReport > self.TodaySec:
             self.NewTasks.append(
