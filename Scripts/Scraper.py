@@ -207,7 +207,7 @@ class Scrape:
 
             if option.text in self.Columns:
                 option.click()
-                time.sleep(self.Delay)
+                time.sleep(self.Delay + .3)
                 self.Clicker(ArrowButton)
                 time.sleep(self.Delay)
                 counter += 1
