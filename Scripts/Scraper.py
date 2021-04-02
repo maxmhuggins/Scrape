@@ -26,7 +26,7 @@ Names = {
     "Sellers, Eric R": "ERIC", "Sperry, Jonathan A": "JONATHAN",
     "LeCrone, Sean": "SEAN", "Robinson, Chance W": "CHANCE",
     "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU",
-    "Heaver, Annika": "ANNIKA",
+    "Heaver, Annika": "ANNIKA", "Robbins, Lance": "LANCE",
     "": "Unassigned"
     }
 
@@ -70,7 +70,7 @@ class Scrape:
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.time()
-        self.Delay = 0
+        self.Delay = .3
         self.Columns = ['Created Date', 'Backlog Priority', 'Tags',
                         'Aligner Model']
         self.Tasks = []
@@ -261,7 +261,10 @@ class Scrape:
                 self.AlignerModel = AlignerModel.text
                 self.Tag = Tag.text
                 self.TaskPriority = Priority.text
-                self.Person = Names[TaskPerson.text]
+                try:
+                    self.Person = Names[TaskPerson.text]
+                except KeyError:
+                    self.Person = TaskPerson.text
                 self.TaskTime = time.strptime(TaskTime.text,
                                               "%m/%d/%Y %I:%M %p")
                 self.TaskTimeSec = time.mktime(self.TaskTime)
@@ -323,6 +326,8 @@ class Scrape:
                 Task[i] = '\&'
             if Task[i] == '$':
                 Task[i] = '\$'
+            if Task[i] == '#':
+                Task[i] = '\#'
             if Task[i] == '_':
                 Task[i] = '\_'                
             else:
