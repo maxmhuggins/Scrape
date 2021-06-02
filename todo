@@ -1,0 +1,10 @@
+To Do For Scraper:
+
+- Write docs so someone else can use
+- Handle dependencies, again so someone else can use
+- Make a list of tasks that changed from test to To-Do for the morning meeting
+- Make different sprint selectable
+	- Maybe instead of this just make several reports from a single run
+- Allow user to make several reports in one sweep
+- Make dictionary importable so it is easier to add people
+- Consolidate VSeries options?
