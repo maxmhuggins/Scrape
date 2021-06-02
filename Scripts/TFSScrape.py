@@ -18,8 +18,8 @@ import config
 #============================================================================#
 Username = config.username
 Password = config.password
-Sprint = 6
-SoftwareVersion = '1.2.0'
+Sprint = 10
+SoftwareVersion = '1.3.0'
 ReportType = 'Tru-Point'
 
 # Sprint = input('Please input the Sprint number\n >')       

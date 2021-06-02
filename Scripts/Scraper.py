@@ -27,6 +27,8 @@ Names = {
     "LeCrone, Sean": "SEAN", "Robinson, Chance W": "CHANCE",
     "D'Agostino, Robert J": "BOB", "Verma, Anju": "ANJU",
     "Heaver, Annika": "ANNIKA", "Robbins, Lance": "LANCE",
+    "Saxena, Kritika": "KRITIKA", "Gill, George M.": "MIKE",
+    "Boehringer, Derreck B": "BO",
     "": "Unassigned"
     }
 
@@ -70,7 +72,7 @@ class Scrape:
         self.DaysSinceLastReport = 1
         self.SecondsSinceLastReport = self.DaysSinceLastReport * 60 * 60 * 24
         self.TodaySec = time.time()
-        self.Delay = .3
+        self.Delay = 0
         self.Columns = ['Created Date', 'Backlog Priority', 'Tags',
                         'Aligner Model']
         self.Tasks = []
@@ -265,6 +267,8 @@ class Scrape:
                     self.Person = Names[TaskPerson.text]
                 except KeyError:
                     self.Person = TaskPerson.text
+                    print('Please add: ' +
+                          '{} to the Names dictionary.'.format(self.Person))
                 self.TaskTime = time.strptime(TaskTime.text,
                                               "%m/%d/%Y %I:%M %p")
                 self.TaskTimeSec = time.mktime(self.TaskTime)
@@ -323,13 +327,13 @@ class Scrape:
         Task = list(Task)
         for i in range(0, len(Task)):
             if Task[i] == '&':
-                Task[i] = '\&'
+                Task[i] = '\\&'
             if Task[i] == '$':
-                Task[i] = '\$'
+                Task[i] = '\\$'
             if Task[i] == '#':
-                Task[i] = '\#'
+                Task[i] = '\\#'
             if Task[i] == '_':
-                Task[i] = '\_'                
+                Task[i] = '\\_'
             else:
                 pass
         Task = ''.join(Task)
