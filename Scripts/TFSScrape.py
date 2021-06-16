@@ -14,10 +14,10 @@ intern team to make their lives easier.
 import time
 import subprocess
 import Scraper
-import supporters.config as config
+import supporters.passwords as passwords
 # ========================================================================== #
-Username = config.username
-Password = config.password
+Username = passwords.username
+Password = passwords.password
 Sprint = 11
 SoftwareVersion = '1.3.0'
 ReportType = 'Tru-Point'

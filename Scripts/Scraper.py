@@ -12,7 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException)
 import operator
-from supporters.config import Names, AlignerModels
+from supporters.dictionaries import Names, AlignerModels
 # ========================================================================== #
 
 
@@ -319,7 +319,8 @@ class Scrape:
         It also handles if there are no tasks in a given categeory.'''
         if len(CurrentCategory) == 0:
             file.write(
-                '\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
+                '\\textit{No top priority tasks to display.}\\vspace{.5cm}\n' +
+                '\\\\')
         else:
             file.write(
                 '\\begin{enumerate}[leftmargin=!,' +
@@ -345,7 +346,7 @@ class Scrape:
                  '\\Large\n' +
                  '\\textsc{{{} Task Report for Sprint {} v{}}}\\\\ \n' +
                  '\\normalsize \\DTMnow\n' +
-                 '\\end{{center}}\\vspace{{1.5cm}}\n\n'
+                 '\\end{{center}}\\vspace{{1.5cm}}\n'
                  ).format(AlignerModels[self.ReportType],
                           self.Sprint,
                           self.SoftwareVersion)
