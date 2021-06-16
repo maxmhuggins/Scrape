@@ -5,3 +5,4 @@ The project uses selenium to scrape relevant project information from Team Found
 You will need to install dependencies and make yourself a password file. Name it passwords.py and have something in it like:
 username = 'pa6519'
 password = 'supersecretpassword'
+this should be saved in the supporters directory
