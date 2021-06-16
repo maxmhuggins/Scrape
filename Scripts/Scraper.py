@@ -12,8 +12,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException)
 import operator
-from config import Names, AlignerModels
+from supporters.config import Names, AlignerModels
 # ========================================================================== #
+
+
 class Scrape:
 
     """
@@ -320,7 +322,9 @@ class Scrape:
                 '\\textit{No top priority tasks to display.}\\vspace{.5cm}\n')
         else:
             file.write(
-                '\\begin{enumerate}[leftmargin=!,labelindent=5pt,itemindent=-35pt]\n')
+                '\\begin{enumerate}[leftmargin=!,' +
+                'labelindent=5pt,' +
+                'itemindent=-35pt]\n')
 
             for Task in CurrentCategory:
                 file.write(self.StringFixer(Task) + '\n')
@@ -333,50 +337,40 @@ class Scrape:
 
         with open('../GeneratedReports/' + self.DocumentTitle, 'w') as file:
 
-            file.write('''\\documentclass[letterpaper, 12pt]{article}\n
-        \\usepackage[utf8]{inputenc}\n
-        \\usepackage[margin=1in,letterpaper]{geometry}\n
-        \\usepackage[stretch=10]{microtype}\n
-        \\usepackage[table,xcdraw]{xcolor}\n
-        \\usepackage{listings}\n
-        \\usepackage{color}\n
-        \\usepackage{xcolor, soul}\n
-        \\usepackage{enumitem}\n
-        \\usepackage[en-GB,showseconds=false, showzone=false]{datetime2}\n
-        \\definecolor{navy}{rgb}{245,156,74}\n
-        \\definecolor{codegreen}{rgb}{0,0.6,0}\n
-        \\definecolor{codegray}{rgb}{0.5,0.5,0.5}\n
-        \\definecolor{codepurple}{rgb}{0.58,0,0.82}\n
-        \\definecolor{backcolour}{rgb}{0.95,0.95,0.92}\n
-        \\DeclareRobustCommand{\\hlcyan}[1]{{\\sethlcolor{cyan}\\hl{#1}}}\n
-        \\DeclareRobustCommand{\\hlyellow}[1]{{\\sethlcolor{yellow}\\hl{#1}}}\n
-        \\DeclareRobustCommand{\\hlgreen}[1]{{\\sethlcolor{green}\\hl{#1}}}\n
-        \\DeclareRobustCommand{\\hlpurple}[1]{{\\sethlcolor{codepurple}\\hl{#1}}}\n''')
+            file.write('\\input{../Scripts/supporters/headers.tex}\n\n')
 
-            file.write('''\\begin{{document}}\n
-        \\begin{{center}}\n
-        \\Large\n
-        \\textsc{{{} Task Report for Sprint {} v{}}}\\\n
-        \\normalsize \\DTMnow\n
-        \\end{{center}}\\vspace{{1.5cm}}\n'''.format(AlignerModels[self.ReportType], self.Sprint, self.SoftwareVersion))
+            file.write(
+                ('\\begin{{document}}\n\n' +
+                 '\\begin{{center}}\n' +
+                 '\\Large\n' +
+                 '\\textsc{{{} Task Report for Sprint {} v{}}}\\\\ \n' +
+                 '\\normalsize \\DTMnow\n' +
+                 '\\end{{center}}\\vspace{{1.5cm}}\n\n'
+                 ).format(AlignerModels[self.ReportType],
+                          self.Sprint,
+                          self.SoftwareVersion)
+                       )
 
-            file.write('''\\large\n
-        \\textsc{{Top Priority Tasks}}\n
-        \\normalsize\n''')
+            file.write('\\large\n' +
+                       '\\textsc{Top Priority Tasks}\n' +
+                       '\\normalsize\n\n'
+                       )
 
             CurrentCategory = self.PriorityTasks
             self.SectionMaker(file, CurrentCategory)
 
-            file.write('''\\large\n
-        \\textsc{{Tasks Created in the Last {}hrs}}\n
-        \\normalsize\n'''.format(str(self.DaysSinceLastReport*24)))
+            file.write(
+                ('\\large\n' +
+                 '\\textsc{{Tasks Created in the Last {}hrs}}\n' +
+                 '\\normalsize\n\n').format(str(self.DaysSinceLastReport * 24))
+                       )
 
             CurrentCategory = self.NewTasks
             self.SectionMaker(file, CurrentCategory)
 
-            file.write('''\\large\n
-        \\textsc{{Previous Tasks}}\n
-        \\normalsize\n''')
+            file.write('\\large\n' +
+                       '\\textsc{{Previous Tasks}}\n' +
+                       '\\normalsize\n\n')
 
             CurrentCategory = self.PreviousTasks
             self.SectionMaker(file, CurrentCategory)

@@ -8,3 +8,23 @@ To Do For Scraper:
 - Allow user to make several reports in one sweep
 - Make dictionary importable so it is easier to add people
 - Consolidate VSeries options?
+
+Need to define the scope of certain sections of the code, seperate them into
+classes so it is easier to read and use.
+
+Need more comments.
+
+In the end, I will need some method of storing old tasks so that the task 
+report has older tasks on it. Possibly just use a .txt file to store the
+old strings and just append them at the end of the tex file.   - Or maybe, I 
+dont...? I mean no one is looking at the old tasks so who gives. 
+
+Wrap up in pretty bow so others can use.
+    To do this: creaete setup.py file
+                Maybe use py2exe to make an exe file
+                
+It would be really snazzy if it saw that a tester's name is assigned to a to-do
+or in progress task that it would move that task to test.
+If I get close to end of the document then clear page
+
+Associate task with the PBI in the report?
